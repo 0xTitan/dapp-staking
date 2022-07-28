@@ -22,7 +22,7 @@ function EthProvider({ children }) {
         }
         dispatch({
           type: actions.init,
-          data: { artifact, web3, accounts, networkID, contract }
+          data: { artifact, web3, accounts, networkID, contract, address }
         });
       }
     }, []);
