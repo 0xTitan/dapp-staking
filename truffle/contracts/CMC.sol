@@ -1,12 +1,12 @@
 // ERC20Token.sol
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.14;
+pragma solidity 0.8.13;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract CMC is ERC20 {
-    uint256 private maxTotalSupply = 10000000 * 10**decimals();
+    uint256 public maxTotalSupply = 10000000 * 10**decimals();
 
     constructor(uint256 initialSupply) ERC20("CAMACLE", "CMC") {
         require(
