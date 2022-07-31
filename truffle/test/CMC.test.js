@@ -18,10 +18,12 @@ contract("CMC", function (accounts) {
   const owner = accounts[0];
   const recipient = accounts[1];
   const spender = accounts[2];
+  //use account 3 to simulate stakingContract
+  const stakingContract = accounts[3];
 
   describe.skip("TOKEN CREATION AND TRANSFER", () => {
     before(async function () {
-      this.CMCInstance = await CMC.new(web3.utils.toBN(_initialsupply), {
+      this.CMCInstance = await CMC.new(web3.utils.toBN(_initialsupply), 0, {
         from: owner,
       });
     });
@@ -132,11 +134,11 @@ contract("CMC", function (accounts) {
       );
     });
   });
-  context.skip("MINT", () => {
+  context("MINT", () => {
     it("verifie si une adresse peut minter", async function () {
       amount = web3.utils.toBN(1000);
       const mintedQty = amount.mul(web3.utils.toBN(10).pow(decimals));
-      this.CMCInstance = await CMC.new(mintedQty, { from: owner });
+      this.CMCInstance = await CMC.new(mintedQty, 0, { from: owner });
       await this.CMCInstance.mint(mintedQty, { from: recipient });
       let balanceRecipient = await this.CMCInstance.balanceOf(recipient);
       //let totalSupply = await this.CMCInstance.totalSupply();
@@ -145,28 +147,55 @@ contract("CMC", function (accounts) {
     it("verifie si une adresse à son mint refusée si la quantité est dépassé", async function () {
       amount = web3.utils.toBN(1001);
       const mintedQty = amount.mul(web3.utils.toBN(10).pow(decimals));
-      this.CMCInstance = await CMC.new(mintedQty, { from: owner });
+      this.CMCInstance = await CMC.new(mintedQty, 0, { from: owner });
       await expectRevert(
         this.CMCInstance.mint(mintedQty, { from: recipient }),
         "Max claimable token is 1000"
       );
     });
     it("verifie que l'init du contrat ne depasse pas le total supply", async function () {
-      amount = web3.utils.toBN(10000001);
+      amount = web3.utils.toBN(20000001);
       const mintedQty = amount.mul(web3.utils.toBN(10).pow(decimals));
       await expectRevert(
-        CMC.new(web3.utils.toBN(mintedQty), { from: owner }),
+        CMC.new(web3.utils.toBN(mintedQty), 0, { from: owner }),
         "The total supply for CMC token will be exceed"
       );
     });
-    it("verifie si une adresse à son mint refusé si la total suply est dépassée", async function () {
+    it("verifie si une adresse à son mint refusé si la total suply mintable est dépassée", async function () {
       amount = web3.utils.toBN(10000000);
       const mintedQty = amount.mul(web3.utils.toBN(10).pow(decimals));
-      this.CMCInstance = await CMC.new(mintedQty, { from: owner });
+      this.CMCInstance = await CMC.new(mintedQty, mintedQty, { from: owner });
       await expectRevert(
         this.CMCInstance.mint(web3.utils.toBN(1), { from: recipient }),
         "The total supply for CMC token will be exceed"
       );
+    });
+  });
+  context("MINT REWARD", () => {
+    before(async function () {
+      this.CMCInstance = await CMC.new(0, 0, {
+        from: owner,
+      });
+    });
+    it("verifie owner peut ajouter l'adresse du contract de staking", async function () {
+      //amount = web3.utils.toBN(10000000);
+      //const mintedQty = amount.mul(web3.utils.toBN(10).pow(decimals));
+      await this.CMCInstance.setStakingContractAddress(stakingContract, {
+        from: owner,
+      });
+      const address = await this.CMCInstance.stakingContract();
+      expect(address).to.equal(stakingContract);
+    });
+    it("verifie stakingContract peut mint des rewards", async function () {
+      amount = web3.utils.toBN(100);
+      const mintedQty = amount.mul(web3.utils.toBN(10).pow(decimals));
+      await this.CMCInstance.mintReward(mintedQty, {
+        from: stakingContract,
+      });
+      let balanceStakingContract = await this.CMCInstance.balanceOf(
+        stakingContract
+      );
+      expect(balanceStakingContract).to.be.bignumber.equal(mintedQty);
     });
   });
 });

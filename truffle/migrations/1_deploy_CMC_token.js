@@ -7,7 +7,7 @@ module.exports = async function (deployer) {
   let mintedQtyToOwner = web3.utils.toBN(1000); // transfer 1000 token to owner
   // calculate ERC20 token amount
   const _initialsupply = supplyAmount.mul(web3.utils.toBN(10).pow(decimals));
-  await deployer.deploy(CMC, _initialsupply);
+  await deployer.deploy(CMC, _initialsupply, 0);
   const CMCInstance = await CMC.deployed();
   await CMCInstance.mint(
     mintedQtyToOwner.mul(web3.utils.toBN(10).pow(decimals))

@@ -5,6 +5,7 @@ pragma solidity 0.8.13;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./CMC.sol";
 
+/** Staking contract with reward for CMC token */
 contract CMCStaking is Ownable {
     CMC public immutable stakingToken;
 
@@ -28,15 +29,18 @@ contract CMCStaking is Ownable {
     // User address => staked amount
     mapping(address => uint256) public balanceOf;
 
-    event UpateRewardPerTokenStored(uint256 rewardPerTokenStored);
-
     constructor(address _stakingToken) {
         stakingToken = CMC(_stakingToken);
     }
 
+    /**@notice update reward 
+    @dev set rewardPerTokenStored
+    @dev set updatedAt
+    @dev call earned() and set result to rewards mapping state variable
+
+    */
     modifier updateReward(address _account) {
         rewardPerTokenStored = rewardPerToken();
-        emit UpateRewardPerTokenStored(rewardPerTokenStored);
         updatedAt = lastTimeRewardApplicable();
 
         if (_account != address(0)) {
@@ -54,6 +58,9 @@ contract CMCStaking is Ownable {
         return _min(finishAt, block.timestamp);
     }
 
+    /** @notice calculate reward per token base on staking duration, already rewarded amount and totalSUpply
+    @return reward number of reward
+     */
     function rewardPerToken() public view returns (uint256) {
         if (totalSupply == 0) {
             return rewardPerTokenStored;
@@ -62,7 +69,7 @@ contract CMCStaking is Ownable {
         uint256 result = rewardPerTokenStored +
             (rewardRate * (lastTimeRewardApplicable() - updatedAt) * 1e18) /
             totalSupply;
-        //Eg with current supply set to 1000 : 0 + (3*(1-0)) /1000
+        //Eg with current supply set to 1000 after one second : 0 + (3*(1-0)) /1000
         return result;
     }
 
@@ -106,7 +113,7 @@ contract CMCStaking is Ownable {
         uint256 reward = rewards[msg.sender];
         if (reward > 0) {
             rewards[msg.sender] = 0;
-            stakingToken.mint(reward);
+            stakingToken.mintReward(reward);
             stakingToken.transfer(msg.sender, reward);
         }
     }
