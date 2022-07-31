@@ -20,7 +20,7 @@ contract("CMCStaking", function (accounts) {
   describe("INIT", () => {
     before(async function () {
       //deploy CMC contract
-      this.CMCInstance = await CMC.new(web3.utils.toBN(_initialsupply),0, {
+      this.CMCInstance = await CMC.new(web3.utils.toBN(_initialsupply), 0, {
         from: owner,
       });
 
@@ -64,7 +64,7 @@ contract("CMCStaking", function (accounts) {
         from: owner,
       });
       const durationFromContract = await this.CMCStakingInstance.duration();
-      expect(durationInSeconds).to.be.bignumber.equal(durationInSeconds);
+      expect(durationInSeconds).to.be.bignumber.equal(durationFromContract);
     });
     it("Owner should set CMC token reward amout", async function () {
       const tokenRewardAmount = web3.utils.toBN(1000); //1000 tokens
@@ -90,7 +90,7 @@ contract("CMCStaking", function (accounts) {
       await time.increase(duration);
       //get reward after 5 seconds
       const reward = await this.CMCStakingInstance.earned(staker);
-      //get all values to to the math check result are correct
+      //get all values to do the math and check result are correct
       const rewardPerTokenStored =
         await this.CMCStakingInstance.rewardPerTokenStored();
       const rewardRate = await this.CMCStakingInstance.rewardRate();
