@@ -12,15 +12,13 @@ function Main() {
       contractCMC,
       contractCMCStaking,
       accounts,
-      address,
+      addressCMCStaking,
       web3,
       networkID,
       isOwnerCMC,
       isOwnerCMCStaking,
     },
   } = useEth();
-
-  // useEffect(()=>{},[])
 
   return (
     <div className="main">
@@ -33,7 +31,9 @@ function Main() {
       )}
       {!isOwnerCMC && (
         <Staking
+          contractCMC={contractCMC}
           contractCMCStaking={contractCMCStaking}
+          addressCMCStaking={addressCMCStaking}
           accounts={accounts}
           web3={web3}
         />

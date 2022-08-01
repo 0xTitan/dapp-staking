@@ -8,6 +8,8 @@ function StakingAdmin(props) {
     "Enter CMC Token amount for reward"
   );
   const [hasTokenAmount, setHasTokenAmount] = useState(false);
+  const [finishAt, setFinishAt] = useState(0);
+  const [blockTimestamp, setBlockTimestamp] = useState(0);
 
   useEffect(() => {
     const isDurationAlreadySet = async () => {
@@ -17,17 +19,20 @@ function StakingAdmin(props) {
         setHasDuration(true);
       }
     };
-    const isTokenAmountAlreadySet = async () => {
-      // const block = await web3.eth.getBlock("latest");
-      // console.log("Block :" + block.timestamp);
-      const value = await contractCMCStaking.methods.finishAt().call();
-      if (value && value > 0) {
-        setHasTokenAmount(true);
-      }
-    };
+
     isDurationAlreadySet();
     isTokenAmountAlreadySet();
   });
+
+  const isTokenAmountAlreadySet = async () => {
+    const block = await web3.eth.getBlock("latest");
+    setBlockTimestamp(block.timestamp);
+    const value = await contractCMCStaking.methods.finishAt().call();
+    if (value && value > 0) {
+      setFinishAt(value);
+      //setHasTokenAmount(true);
+    }
+  };
 
   const handleDurationChange = (e) => {
     const { value } = e.target;
@@ -57,15 +62,13 @@ function StakingAdmin(props) {
   };
 
   const handleSetTokenAmount = async () => {
-    console.log(tokenAmount);
-    console.log(contractCMCStaking);
     let decimals = web3.utils.toBN(18);
     const amount = web3.utils.toBN(tokenAmount);
     const rewards = amount.mul(web3.utils.toBN(10).pow(decimals));
     const transact = await contractCMCStaking.methods
       .defineRewardAmount(rewards)
       .send({ from: accounts[0] });
-    setHasTokenAmount(true);
+    isTokenAmountAlreadySet();
     // showEvent(
     //   "Voter added  :" +
     //     transact.events.VoterRegistered.returnValues.voterAddress
@@ -106,16 +109,26 @@ function StakingAdmin(props) {
               id="tokenAmount"
               value={tokenAmount}
               onChange={(e) => handleSetTokenAmountChange(e)}
-              disabled={hasTokenAmount}
+              // disabled={hasTokenAmount}
             ></input>
             <button
               type="button"
               className="tokenAmount-button"
               onClick={handleSetTokenAmount}
-              disabled={tokenAmount <= 0 || hasTokenAmount}
+              // disabled={tokenAmount <= 0 || hasTokenAmount}
             >
               <span>Set token amount</span>
             </button>
+          </div>
+          <div>
+            <span className="admin-instruction">
+              Program finish at : {finishAt}
+            </span>
+          </div>
+          <div>
+            <span className="admin-instruction">
+              Current block time is : {blockTimestamp}
+            </span>
           </div>
         </div>
       </div>

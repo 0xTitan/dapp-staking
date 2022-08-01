@@ -90,7 +90,7 @@ contract("CMCStaking", function (accounts) {
       await time.increase(duration);
       //get reward after 5 seconds
       const reward = await this.CMCStakingInstance.earned(staker);
-      //get all values to do the math and check result are correct
+      //get all values to do the math a check result are correct
       const rewardPerTokenStored =
         await this.CMCStakingInstance.rewardPerTokenStored();
       const rewardRate = await this.CMCStakingInstance.rewardRate();

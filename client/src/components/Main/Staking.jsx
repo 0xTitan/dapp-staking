@@ -1,79 +1,139 @@
 import { useState, useEffect } from "react";
 
 function Staking(props) {
-  const { contractCMCStaking, accounts, web3 } = props;
-  const [duration, setDuration] = useState("Enter reward duration in (s)");
-  const [hasDuration, setHasDuration] = useState(false);
-  const [tokenAmount, setTokenAmount] = useState(
-    "Enter CMC Token amount for reward"
+  const { contractCMC, contractCMCStaking, addressCMCStaking, accounts, web3 } =
+    props;
+  const [tokenAmountToStake, setTokenAmountToStake] = useState(
+    "Enter CMC Token amount you want to stake"
   );
-  const [hasTokenAmount, setHasTokenAmount] = useState(false);
+  const [tokenAmountToWidthdraw, setTokenAmountToWidthdraw] = useState(
+    "Enter CMC Token amount you wnat to widthdraw"
+  );
+  const [tokenAmountToMint, setTokenAmountToMint] = useState(
+    "Enter CMC Token amount you wnat to mint"
+  );
+  const [balanceCMC, setBalanceCMC] = useState(0);
+  const [rewardEarn, setRewardEarn] = useState(0);
+  const [stakedAmount, setStakedAmount] = useState(0);
 
   useEffect(() => {
-    const isDurationAlreadySet = async () => {
-      const value = await contractCMCStaking.methods.duration().call();
-      if (value && value > 0) {
-        setDuration(value);
-        setHasDuration(true);
-      }
+    //get CMC balance
+    const getCMCBalance = async () => {
+      const valueWei = contractCMC
+        ? await contractCMC.methods.balanceOf(accounts[0]).call()
+        : 0;
+      let valueCMC = web3 ? web3.utils.fromWei(valueWei, "ether") : 0;
+      setBalanceCMC(valueCMC);
     };
-    const isTokenAmountAlreadySet = async () => {
-      // const block = await web3.eth.getBlock("latest");
-      // console.log("Block :" + block.timestamp);
-      const value = await contractCMCStaking.methods.finishAt().call();
-      if (value && value > 0) {
-        setHasTokenAmount(true);
-      }
+
+    getCMCBalance();
+    getStakedBalance();
+
+    //start timer to display reward
+    const interval = setInterval(() => {
+      getReward();
+    }, 3000);
+
+    return () => {
+      clearInterval(interval);
     };
-    isDurationAlreadySet();
-    isTokenAmountAlreadySet();
   });
 
-  const handleDurationChange = (e) => {
+  const handleStakeAmountChange = (e) => {
     const { value } = e.target;
     //remove non numeric character
     const result = value.replace(/\D/g, "");
-    setDuration(result);
+    setTokenAmountToStake(result);
   };
 
-  const handleSetDuration = async () => {
-    console.log(duration);
-    console.log(contractCMCStaking);
-    const transact = await contractCMCStaking.methods
-      .setRewardsDuration(duration)
-      .send({ from: accounts[0] });
-    setHasDuration(true);
-    // showEvent(
-    //   "Voter added  :" +
-    //     transact.events.VoterRegistered.returnValues.voterAddress
-    // );
-  };
-
-  const handleSetTokenAmountChange = (e) => {
-    const { value } = e.target;
-    //remove non numeric character
-    const result = value.replace(/\D/g, "");
-    setTokenAmount(result);
-  };
-
-  const handleSetTokenAmount = async () => {
-    console.log(tokenAmount);
-    console.log(contractCMCStaking);
+  const handleStake = async () => {
     let decimals = web3.utils.toBN(18);
-    const amount = web3.utils.toBN(tokenAmount);
-    const rewards = amount.mul(web3.utils.toBN(10).pow(decimals));
+    const amount = web3.utils.toBN(tokenAmountToStake);
+    const stakeQty = amount.mul(web3.utils.toBN(10).pow(decimals));
+    const approved = await contractCMC.methods
+      .approve(addressCMCStaking, stakeQty)
+      .send({
+        from: accounts[0],
+      });
+    if (approved) {
+      const transact = await contractCMCStaking.methods
+        .stake(stakeQty)
+        .send({ from: accounts[0] });
+      getStakedBalance();
+    }
+  };
+
+  const handleWidthdrawAmountChange = (e) => {
+    const { value } = e.target;
+    //remove non numeric character
+    const result = value.replace(/\D/g, "");
+    setTokenAmountToWidthdraw(result);
+  };
+
+  const handleWidthdraw = async () => {
+    let decimals = web3.utils.toBN(18);
+    const amount = web3.utils.toBN(tokenAmountToWidthdraw);
+    const withdrawQty = amount.mul(web3.utils.toBN(10).pow(decimals));
     const transact = await contractCMCStaking.methods
-      .defineRewardAmount(rewards)
+      .withdraw(withdrawQty)
       .send({ from: accounts[0] });
-    setHasTokenAmount(true);
-    // showEvent(
-    //   "Voter added  :" +
-    //     transact.events.VoterRegistered.returnValues.voterAddress
-    // );
+  };
+
+  const handleMintAmountChange = (e) => {
+    const { value } = e.target;
+    //remove non numeric character
+    const result = value.replace(/\D/g, "");
+    setTokenAmountToMint(result);
+  };
+
+  const handleMint = async () => {
+    let decimals = web3.utils.toBN(18);
+    const amount = web3.utils.toBN(tokenAmountToMint);
+    const mintQty = amount.mul(web3.utils.toBN(10).pow(decimals));
+    const transact = await contractCMC.methods
+      .mint(mintQty)
+      .send({ from: accounts[0] });
+  };
+
+  const getStakedBalance = async () => {
+    if (contractCMCStaking) {
+      let stakedBalance = await contractCMCStaking.methods
+        .balanceOf(accounts[0])
+        .call();
+      stakedBalance = web3 ? web3.utils.fromWei(stakedBalance, "ether") : 0;
+      setStakedAmount(stakedBalance);
+    }
+  };
+
+  const getReward = async () => {
+    if (contractCMCStaking) {
+      let reward = await contractCMCStaking.methods.earned(accounts[0]).call();
+      reward = web3 ? web3.utils.fromWei(reward, "ether") : 0;
+      setRewardEarn(reward);
+    }
   };
 
   return (
     <div className="staking-main">
+      <div className="mint-input">
+        <input
+          className="mint-inputTxt"
+          name="mint"
+          type="text"
+          id="mint"
+          value={tokenAmountToMint}
+          onChange={(e) => handleMintAmountChange(e)}
+        ></input>
+        <button
+          type="button"
+          className="mint-button"
+          onClick={handleMint}
+          // disabled={duration <= 0 || hasDuration}
+        >
+          <span>Mint</span>
+        </button>
+      </div>
+      <hr></hr>
       <span className="admin-instruction">
         Please proceed with amount of token you want to set for staking
       </span>
@@ -81,29 +141,46 @@ function Staking(props) {
       <div className="staking-input">
         <input
           className="staking-inputTxt"
-          name="duration"
+          name="stake"
           type="text"
-          id="duration"
-          value={duration}
-          onChange={(e) => handleDurationChange(e)}
-          disabled={hasDuration}
+          id="stake"
+          value={tokenAmountToStake}
+          onChange={(e) => handleStakeAmountChange(e)}
         ></input>
         <button
           type="button"
           className="staking-button"
-          onClick={handleSetDuration}
-          disabled={duration <= 0 || hasDuration}
+          onClick={handleStake}
+          // disabled={duration <= 0 || hasDuration}
         >
           <span>Stake</span>
         </button>
+      </div>
+      <div className="widthdraw-input">
+        <input
+          className="widthdraw-inputTxt"
+          name="widthdraw"
+          type="text"
+          id="widthdraw"
+          value={tokenAmountToWidthdraw}
+          onChange={(e) => handleWidthdrawAmountChange(e)}
+        ></input>
         <button
           type="button"
           className="withdraw-button"
-          onClick={handleSetDuration}
-          disabled={duration <= 0 || hasDuration}
+          onClick={handleWidthdraw}
+          // disabled={duration <= 0 || hasDuration}
         >
           <span>Withdraw</span>
         </button>
+      </div>
+      <div>
+        <span className="admin-instruction">
+          Staked amount : {stakedAmount}
+        </span>
+      </div>
+      <div>
+        <span className="admin-instruction">Rewards earned : {rewardEarn}</span>
       </div>
     </div>
   );
