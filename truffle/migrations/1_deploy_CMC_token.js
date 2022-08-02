@@ -9,6 +9,7 @@ module.exports = async function (deployer) {
   const _initialsupply = supplyAmount.mul(web3.utils.toBN(10).pow(decimals));
   await deployer.deploy(CMC, _initialsupply, 0);
   const CMCInstance = await CMC.deployed();
+  console.log("CMCInstanceAddress =>", CMCInstance.address);
   await CMCInstance.mint(
     mintedQtyToOwner.mul(web3.utils.toBN(10).pow(decimals))
   );
