@@ -1,8 +1,14 @@
 import { useState, useEffect } from "react";
 
 function Staking(props) {
-  const { contractCMC, contractCMCStaking, addressCMCStaking, accounts, web3 } =
-    props;
+  const {
+    contractCMC,
+    contractCMCStaking,
+    addressCMCStaking,
+    accounts,
+    web3,
+    refreshBalance,
+  } = props;
   const [tokenAmountToStake, setTokenAmountToStake] = useState(
     "Enter CMC Token amount you want to stake"
   );
@@ -39,6 +45,7 @@ function Staking(props) {
     };
   });
 
+  /***********************Staking management************************ */
   const handleStakeAmountChange = (e) => {
     const { value } = e.target;
     //remove non numeric character
@@ -60,9 +67,12 @@ function Staking(props) {
         .stake(stakeQty)
         .send({ from: accounts[0] });
       getStakedBalance();
+      refreshBalance("refresh after stake");
+      setTokenAmountToStake("");
     }
   };
 
+  /***********************Widthdraw management************************ */
   const handleWidthdrawAmountChange = (e) => {
     const { value } = e.target;
     //remove non numeric character
@@ -77,8 +87,12 @@ function Staking(props) {
     const transact = await contractCMCStaking.methods
       .withdraw(withdrawQty)
       .send({ from: accounts[0] });
+    getStakedBalance();
+    refreshBalance("refresh after widthdraw");
+    setTokenAmountToWidthdraw("");
   };
 
+  /***********************Mint management************************ */
   const handleMintAmountChange = (e) => {
     const { value } = e.target;
     //remove non numeric character
@@ -93,8 +107,11 @@ function Staking(props) {
     const transact = await contractCMC.methods
       .mint(mintQty)
       .send({ from: accounts[0] });
+    refreshBalance("refresh after mint");
+    setTokenAmountToMint("");
   };
 
+  /***********************Get staked amout info************************ */
   const getStakedBalance = async () => {
     if (contractCMCStaking) {
       let stakedBalance = await contractCMCStaking.methods
@@ -105,11 +122,21 @@ function Staking(props) {
     }
   };
 
+  /***********************Get reward info*********************** */
   const getReward = async () => {
     if (contractCMCStaking) {
       let reward = await contractCMCStaking.methods.earned(accounts[0]).call();
       reward = web3 ? web3.utils.fromWei(reward, "ether") : 0;
       setRewardEarn(reward);
+    }
+  };
+
+  /***********************Widthdraw reward************************ */
+  const handleWidthdrawReward = async () => {
+    if (contractCMCStaking) {
+      await contractCMCStaking.methods.getReward().send({ from: accounts[0] });
+      getStakedBalance();
+      refreshBalance("refresh after get reward");
     }
   };
 
@@ -172,6 +199,14 @@ function Staking(props) {
           // disabled={duration <= 0 || hasDuration}
         >
           <span>Withdraw</span>
+        </button>
+        <button
+          type="button"
+          className="withdrawReward-button"
+          onClick={handleWidthdrawReward}
+          // disabled={duration <= 0 || hasDuration}
+        >
+          <span>Withdraw Reward</span>
         </button>
       </div>
       <div>

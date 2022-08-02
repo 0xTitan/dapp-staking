@@ -7,7 +7,7 @@ import NoticeNoArtifact from "./NoticeNoArtifact";
 import NoticeWrongNetwork from "./NoticeWrongNetwork";
 import UserInformations from "./UserInformations";
 
-function Intro() {
+function Intro({ userInfo, refreshBalance }) {
   const {
     state,
     state: {
@@ -45,7 +45,7 @@ function Intro() {
     }
 
     getDetails();
-  }, [state, address, accounts]);
+  }, [state, address, accounts, userInfo, refreshBalance]);
 
   const getBalance = async () => {
     // const value = contract

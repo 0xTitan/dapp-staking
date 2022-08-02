@@ -5,7 +5,7 @@ import Swap from "./Swap";
 import StakingAdmin from "./StakingAdmin";
 import Staking from "./Staking";
 
-function Main() {
+function Main({ refreshBalance }) {
   const {
     state,
     state: {
@@ -22,13 +22,19 @@ function Main() {
   } = useEth();
   console.log("address CMC =>", addressCMC);
 
+  useEffect(() => {
+    console.log(state);
+  });
+
   return (
     <div className="main">
       {/* <Swap addressCMC={addressCMC} />
       <hr /> */}
       {isOwnerCMC && (
         <StakingAdmin
+          contractCMC={contractCMC}
           contractCMCStaking={contractCMCStaking}
+          addressCMCStaking={addressCMCStaking}
           accounts={accounts}
           web3={web3}
         />
@@ -40,6 +46,7 @@ function Main() {
           addressCMCStaking={addressCMCStaking}
           accounts={accounts}
           web3={web3}
+          refreshBalance={refreshBalance}
         />
       )}
     </div>

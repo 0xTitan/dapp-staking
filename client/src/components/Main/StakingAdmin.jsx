@@ -1,28 +1,30 @@
 import { useState, useEffect } from "react";
 
 function StakingAdmin(props) {
-  const { contractCMCStaking, accounts, web3 } = props;
+  const { contractCMC, contractCMCStaking, addressCMCStaking, accounts, web3 } =
+    props;
   const [duration, setDuration] = useState("Enter reward duration in (s)");
   const [hasDuration, setHasDuration] = useState(false);
   const [tokenAmount, setTokenAmount] = useState(
     "Enter CMC Token amount for reward"
   );
   const [hasTokenAmount, setHasTokenAmount] = useState(false);
+  const [hasRewardAddressDefined, setRewardAddressDefine] = useState(false);
   const [finishAt, setFinishAt] = useState(0);
   const [blockTimestamp, setBlockTimestamp] = useState(0);
 
   useEffect(() => {
-    const isDurationAlreadySet = async () => {
-      const value = await contractCMCStaking.methods.duration().call();
-      if (value && value > 0) {
-        setDuration(value);
-        setHasDuration(true);
-      }
-    };
-
     isDurationAlreadySet();
     isTokenAmountAlreadySet();
   });
+
+  const isDurationAlreadySet = async () => {
+    const value = await contractCMCStaking.methods.duration().call();
+    if (value && value > 0) {
+      setDuration(value);
+      setHasDuration(true);
+    }
+  };
 
   const isTokenAmountAlreadySet = async () => {
     const block = await web3.eth.getBlock("latest");
@@ -31,6 +33,13 @@ function StakingAdmin(props) {
     if (value && value > 0) {
       setFinishAt(value);
       //setHasTokenAmount(true);
+    }
+  };
+
+  const isRewardAddressDefined = async () => {
+    const value = await contractCMC.methods.stakingContract().call();
+    if (value) {
+      setRewardAddressDefine(true);
     }
   };
 
@@ -69,6 +78,17 @@ function StakingAdmin(props) {
       .defineRewardAmount(rewards)
       .send({ from: accounts[0] });
     isTokenAmountAlreadySet();
+    // showEvent(
+    //   "Voter added  :" +
+    //     transact.events.VoterRegistered.returnValues.voterAddress
+    // );
+  };
+
+  const handleSetContractAddressForRewardMinting = async () => {
+    const transact = await contractCMC.methods
+      .setStakingContractAddress(addressCMCStaking)
+      .send({ from: accounts[0] });
+    setRewardAddressDefine(true);
     // showEvent(
     //   "Voter added  :" +
     //     transact.events.VoterRegistered.returnValues.voterAddress
@@ -118,6 +138,16 @@ function StakingAdmin(props) {
               // disabled={tokenAmount <= 0 || hasTokenAmount}
             >
               <span>Set token amount</span>
+            </button>
+          </div>
+          <div>
+            <button
+              type="button"
+              className="setAdressForReward-button"
+              onClick={handleSetContractAddressForRewardMinting}
+              disabled={hasRewardAddressDefined}
+            >
+              <span>Allow this contract for reward minting</span>
             </button>
           </div>
           <div>

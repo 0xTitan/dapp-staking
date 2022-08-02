@@ -50,7 +50,7 @@ function EthProvider({ children }) {
           addressCMC,
           addressCMCStaking,
           isOwnerCMC,
-          isOwnerCMCStaking,
+          isOwnerCMCStaking,      
         },
       });
     }
