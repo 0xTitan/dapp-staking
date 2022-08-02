@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import useEth from "../../contexts/EthContext/useEth";
 import Title from "./Title";
-import Body from "./Body";
+import Swap from "./Swap";
 import StakingAdmin from "./StakingAdmin";
 import Staking from "./Staking";
 
@@ -22,6 +22,8 @@ function Main() {
 
   return (
     <div className="main">
+      {/* <Swap />
+      <hr /> */}
       {isOwnerCMC && (
         <StakingAdmin
           contractCMCStaking={contractCMCStaking}
@@ -38,7 +40,6 @@ function Main() {
           web3={web3}
         />
       )}
-      {/* <Body /> */}
     </div>
   );
 }
