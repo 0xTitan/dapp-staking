@@ -1,8 +1,8 @@
-function Swap() {
+function Swap(props) {
   return (
     <div>
       <iframe
-        src="https://app.uniswap.org/#/swap?outputCurrency=0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359"
+        src={`https://app.uniswap.org/#/swap?theme=dark&outputCurrency=${props.addressCMC}`}
         height="660px"
         width="100%"
         style={{

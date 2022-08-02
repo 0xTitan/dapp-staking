@@ -13,16 +13,18 @@ function Main() {
       contractCMCStaking,
       accounts,
       addressCMCStaking,
+      addressCMC,
       web3,
       networkID,
       isOwnerCMC,
       isOwnerCMCStaking,
     },
   } = useEth();
+  console.log("address CMC =>", addressCMC);
 
   return (
     <div className="main">
-      {/* <Swap />
+      {/* <Swap addressCMC={addressCMC} />
       <hr /> */}
       {isOwnerCMC && (
         <StakingAdmin
