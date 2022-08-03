@@ -96,21 +96,21 @@ module.exports = async function (deployer, network, accounts) {
       CMCLiquidityInstance.address,
       10000
     );
-    console.log(6, "approved CMCLiquidityInstance for FETH =>", approve1.logs);
+    console.log(
+      6,
+      "approved CMCLiquidityInstance for FETH =>",
+      approve1.logs[0].args
+    );
 
     let approve2 = await CMCInstance.approve(
       CMCLiquidityInstance.address,
       10000
     );
-    console.log(6, "approved CMCLiquidityInstance for CMC =>", approve2.logs);
-
-    // let newPair = new web3.eth.Contract(UniswapV2Pair.abi, pair0);
-
-    // await newPair.methods
-    //   .approve(CMCLiquidityInstance.address, 10000)
-    //   .send({ from: accounts[0] });
-
-    // console.log(6, "newPair =>", newPair);
+    console.log(
+      6,
+      "approved CMCLiquidityInstance for CMC =>",
+      approve2.logs[0].args
+    );
 
     console.log(
       6,
@@ -135,8 +135,15 @@ module.exports = async function (deployer, network, accounts) {
       (await UniswapV2FactoryInstance.allPairsLength()).toString()
     );
 
-    // const pair1 = await UniswapV2FactoryInstance.allPairs(1);
-    // console.log(6, "pair1 =>", pair1);
+    const pair0 = await UniswapV2FactoryInstance.allPairs(0);
+    console.log(6, "pair0 =>", pair0);
+
+    let newPair = new web3.eth.Contract(UniswapV2Pair.abi, pair0);
+    console.log(6, "newPair.methods =>", newPair.methods);
+
+    // await newPair.methods
+    //   .approve(CMCLiquidityInstance.address, 10000)
+    //   .send({ from: accounts[0] });
 
     // const pairBalance = await newPair.methods.balanceOf(
     //   CMCLiquidityInstance.address

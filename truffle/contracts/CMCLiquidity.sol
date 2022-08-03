@@ -48,7 +48,7 @@ contract CMCLiquidity is Ownable {
 
         emit Log("amountA", amountA);
         emit Log("amountB", amountB);
-        emit Log("liquitity", liquidity);
+        emit Log("liquidity", liquidity);
     }
 
     function removeLiquidity(address _tokenA, address _tokenB) external {
