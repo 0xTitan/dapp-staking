@@ -14,6 +14,7 @@ const addressWETHRopsten = "0xc778417E063141139Fce010982780140Aa0cD5Ab";
 
 UniswapV2Factory.setProvider(web3._provider);
 UniswapV2Router.setProvider(web3._provider);
+UniswapV2Pair.setProvider(web3._provider);
 
 module.exports = async function (deployer, network, accounts) {
   console.log("network =>", network);
@@ -80,30 +81,42 @@ module.exports = async function (deployer, network, accounts) {
       (await FETHInstance.balanceOf(accounts[0])).toString()
     );
 
-    const createPair = await UniswapV2FactoryInstance.createPair(
-      FETHInstance.address,
-      CMCInstance.address,
-      { from: accounts[0] }
-    );
-    console.log(6, "createPair.logs =>", createPair.logs);
+    // const createPair = await UniswapV2FactoryInstance.createPair(
+    //   FETHInstance.address,
+    //   CMCInstance.address,
+    //   { from: accounts[0] }
+    // );
+    // console.log(6, "createPair.logs =>", createPair.logs);
 
-    const pair0 = await UniswapV2FactoryInstance.allPairs(0);
-    console.log(6, "pair0 =>", pair0);
+    // const pair0 = await UniswapV2FactoryInstance.allPairs(0);
+    // console.log(6, "pair0 =>", pair0);
 
     //approve CMCLiquidity
-    // let feth = new web3.eth.Contract(ERC20.abi, FETHInstance.address);
-    await FETHInstance.approve(CMCLiquidityInstance.address, 10000);
-    console.log(6, "approved CMCLiquidityInstance for FETH");
+    let approve1 = await FETHInstance.approve(
+      CMCLiquidityInstance.address,
+      10000
+    );
+    console.log(6, "approved CMCLiquidityInstance for FETH =>", approve1.logs);
 
-    await CMCInstance.approve(CMCLiquidityInstance.address, 10000);
-    console.log(6, "approved CMCLiquidityInstance for CMC");
+    let approve2 = await CMCInstance.approve(
+      CMCLiquidityInstance.address,
+      10000
+    );
+    console.log(6, "approved CMCLiquidityInstance for CMC =>", approve2.logs);
 
-    let newPair = new web3.eth.Contract(ERC20.abi, pair0);
-    await newPair.methods
-      .approve(CMCLiquidityInstance.address, 10000)
-      .send({ from: accounts[0] });
+    // let newPair = new web3.eth.Contract(UniswapV2Pair.abi, pair0);
+
+    // await newPair.methods
+    //   .approve(CMCLiquidityInstance.address, 10000)
+    //   .send({ from: accounts[0] });
 
     // console.log(6, "newPair =>", newPair);
+
+    console.log(
+      6,
+      "allPairsLength Before addLiquidity",
+      (await UniswapV2FactoryInstance.allPairsLength()).toString()
+    );
 
     const lp = await CMCLiquidityInstance.addLiquidity(
       FETHInstance.address,
@@ -116,14 +129,20 @@ module.exports = async function (deployer, network, accounts) {
     console.log(6, "lp.logs1 =>", lp.logs[1].args);
     console.log(6, "lp.logs2 =>", lp.logs[2].args);
 
+    console.log(
+      6,
+      "allPairsLength after addLiquidity",
+      (await UniswapV2FactoryInstance.allPairsLength()).toString()
+    );
+
     // const pair1 = await UniswapV2FactoryInstance.allPairs(1);
     // console.log(6, "pair1 =>", pair1);
 
-    const pairBalance = await newPair.methods.balanceOf(
-      CMCLiquidityInstance.address
-    );
+    // const pairBalance = await newPair.methods.balanceOf(
+    //   CMCLiquidityInstance.address
+    // );
 
-    console.log(6, "pairBalance : " + pairBalance);
+    // console.log(6, "pairBalance : " + pairBalance);
 
     console.log(6, "development finish");
   } else if (network === "ropsten") {
