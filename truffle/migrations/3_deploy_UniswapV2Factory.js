@@ -1,10 +1,12 @@
 const jsonFactory = require("@uniswap/v2-core/build/UniswapV2Factory.json");
 const jsonRouter = require("@uniswap/v2-periphery/build/UniswapV2Router02.json");
+const jsonPair = require("@uniswap/v2-core/build/UniswapV2Pair.json");
 const ERC20 = require("@openzeppelin/contracts/build/contracts/IERC20.json");
 const contract = require("@truffle/contract");
 const CMCLiquidity = artifacts.require("CMCLiquidity");
 const UniswapV2Factory = contract(jsonFactory);
 const UniswapV2Router = contract(jsonRouter);
+const UniswapV2Pair = contract(jsonPair);
 
 const CMC = artifacts.require("CMC");
 const FETH = artifacts.require("FETH");
@@ -101,7 +103,7 @@ module.exports = async function (deployer, network, accounts) {
       .approve(CMCLiquidityInstance.address, 10000)
       .send({ from: accounts[0] });
 
-    console.log(6, "newPair =>", newPair);
+    // console.log(6, "newPair =>", newPair);
 
     const lp = await CMCLiquidityInstance.addLiquidity(
       FETHInstance.address,
@@ -110,7 +112,12 @@ module.exports = async function (deployer, network, accounts) {
       10000
     );
 
-    console.log(6, "lp.logs =>", lp.logs);
+    console.log(6, "lp.logs0 =>", lp.logs[0].args);
+    console.log(6, "lp.logs1 =>", lp.logs[1].args);
+    console.log(6, "lp.logs2 =>", lp.logs[2].args);
+
+    // const pair1 = await UniswapV2FactoryInstance.allPairs(1);
+    // console.log(6, "pair1 =>", pair1);
 
     const pairBalance = await newPair.methods.balanceOf(
       CMCLiquidityInstance.address
