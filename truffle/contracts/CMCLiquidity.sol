@@ -19,7 +19,7 @@ contract CMCLiquidity is Ownable {
         uint256 _amountA,
         uint256 _amountB,
         address _router
-    ) external returns (uint256) {
+    ) external {
         //transfer both token to smart contract
         IERC20(_tokenA).transferFrom(msg.sender, address(this), _amountA);
         IERC20(_tokenB).transferFrom(msg.sender, address(this), _amountB);
@@ -43,7 +43,6 @@ contract CMCLiquidity is Ownable {
         emit Log("amountA", amountA);
         emit Log("amountB", amountB);
         emit Log("liquitity", liquidity);
-        return liquidity;
     }
 
     function removeLiquidity(

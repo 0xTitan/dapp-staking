@@ -85,9 +85,9 @@ module.exports = async function (deployer, network, accounts) {
     console.log("approved CMCLiquidityInstance for CMC");
 
     let newPair = new web3.eth.Contract(ERC20.abi, pair0);
-    // await newPair.methods
-    //   .approve(CMCLiquidityInstance.address, 1000)
-    //   .send({ from: accounts[0] });
+     await newPair.methods
+       .approve(CMCLiquidityInstance.address, 10000)
+      .send({ from: accounts[0] });
 
     const lp = await CMCLiquidityInstance.addLiquidity(
       FETHInstance.address,
@@ -97,7 +97,7 @@ module.exports = async function (deployer, network, accounts) {
       UniswapV2RouterInstance.address
     );
 
-    console.log("LP amount : " + lp);
+    console.log(lp);
 
     const pairBalance = await newPair.methods.balanceOf(
       CMCLiquidityInstance.address
