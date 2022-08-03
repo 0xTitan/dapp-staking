@@ -24,7 +24,80 @@
   height: 100%;
 }
 
-code {
+button[class*="button"] {
+  padding: 10px 12px;
+  border-radius: 15px;
+  border: none;
+  font-size: 12px;
+  min-width: 75px;
+  max-width: 200px;
+
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 3px 2px 0 0 #3273a89f;
+  color: white;
+  background: rgba(0, 0, 0, 0.575);
+  transition: transform 0.1s ease;
+}
+
+button[class*="button"]:disabled {
+  padding: 10px 12px;
+  border-radius: 15px;
+  border: none;
+  font-size: 12px;
+  min-width: 75px;
+  text-align: center;
+  cursor: pointer;
+  color: white;
+  background: rgba(0, 0, 0, 0.205);
+  pointer-events: none;
+}
+
+button[class*="button"]::after,
+button[class*="button"]::before {
+  content: "";
+  position: absolute;
+  opacity: 0.2;
+  background-color: rgb(0, 0, 0);
+  border-radius: inherit;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  bottom: 0;
+  z-index: -1;
+  transition: transform 0.1s ease;
+}
+
+button[class*="button"]:hover {
+  transform: translate(-3px, -3px);
+}
+
+button[class*="button"]:hover::after {
+  transform: translate(-1.5px, -0.1.5px);
+}
+
+button[class*="button"]:hover::before {
+  transform: translate(3px, 3px);
+}
+
+input[class*="inputTxt"] {
+  font-size: 12px;
+  border: none;
+  appearance: none;
+  background: #f2f2f2b9;
+  padding: 10px;
+  outline: none;
+  width: 260px;
+  border-radius: 5px;
+}
+
+span[class*="instruction"] {
+  color: white;
+  margin: 5px;
+  padding-top: 10px;
+}
+
+/* code {
   display: block;
   white-space: pre-wrap;
   padding: 1.2rem 2rem;
@@ -51,16 +124,16 @@ code span.dim-color {
 
 code span.flash {
   background-color: var(--flash-color);
-}
+} */
 
-p {
+/* p {
   line-height: 2.6rem;
 }
 
 p span.code {
   font-family: monospace;
   color: var(--gray);
-}
+} */
 
 hr {
   margin: 4rem 0;

@@ -1,0 +1,37 @@
+.stakingAdmin-main {
+  display: flex;
+  flex-direction: column;
+  min-height: 300px;
+  align-items: center;
+  margin: 15px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+}
+
+.stakingAdmin-duration,
+.stakingAdmin-tokenAmount {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.stakingAdmin-mintAdress {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.stakingAdmin-info {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.duration-button {
+  margin-left: 10px;
+}
+
+.tokenAmount-button {
+  margin-left: 10px;
+}

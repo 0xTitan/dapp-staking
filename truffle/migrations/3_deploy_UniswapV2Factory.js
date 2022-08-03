@@ -171,6 +171,33 @@ module.exports = async function (deployer, network, accounts) {
   } else if (network === "ropsten") {
     console.log(5, "ropsten start");
     // to complement
+    let weth = new web3.eth.Contract(ERC20.abi, addressWETHRopsten);
+    await weth.methods
+      .approve(CMCLiquidityInstance.address, 10000000)
+      .send({ from: accounts[0] });
+    console.log(6, "approved CMCLiquidityInstance for WETH");
+
+    let approve2 = await CMCInstance.approve(
+      CMCLiquidityInstance.address,
+      10000000
+    );
+    console.log(
+      7,
+      "approved CMCLiquidityInstance for CMC =>",
+      approve2.logs[0].args
+    );
+
+    const lp = await CMCLiquidityInstance.addLiquidity(
+      addressWETHRopsten,
+      CMCInstance.address,
+      10000000,
+      10000000
+    );
+
+    console.log(6, "lp.logs0 =>", lp.logs[0].args);
+    console.log(6, "lp.logs1 =>", lp.logs[1].args);
+    console.log(6, "lp.logs2 =>", lp.logs[2].args);
+
     console.log(5, "ropsten finish");
   } else if (network === "kovan") {
     console.log(5, "kovan start");

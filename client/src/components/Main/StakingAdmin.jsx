@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import "./StakingAdmin.css";
 
 function StakingAdmin(props) {
   const { contractCMC, contractCMCStaking, addressCMCStaking, accounts, web3 } =
@@ -100,6 +101,18 @@ function StakingAdmin(props) {
       <span className="admin-instruction">
         Admin please proceed with staking program configuration
       </span>
+      <div className="stakingAdmin-info">
+        <div>
+          <span className="admin-instruction">
+            Current block time is : {blockTimestamp}
+          </span>
+        </div>
+        <div>
+          <span className="admin-instruction">
+            | Program finish at : {finishAt}
+          </span>
+        </div>
+      </div>
       <div className="stakingAdmin-duration">
         <div className="duration-input">
           <input
@@ -140,7 +153,7 @@ function StakingAdmin(props) {
               <span>Set token amount</span>
             </button>
           </div>
-          <div>
+          <div className="stakingAdmin-mintAdress">
             <button
               type="button"
               className="setAdressForReward-button"
@@ -149,16 +162,6 @@ function StakingAdmin(props) {
             >
               <span>Allow this contract for reward minting</span>
             </button>
-          </div>
-          <div>
-            <span className="admin-instruction">
-              Program finish at : {finishAt}
-            </span>
-          </div>
-          <div>
-            <span className="admin-instruction">
-              Current block time is : {blockTimestamp}
-            </span>
           </div>
         </div>
       </div>
