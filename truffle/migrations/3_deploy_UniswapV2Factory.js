@@ -141,6 +141,20 @@ module.exports = async function (deployer, network, accounts) {
     let newPair = new web3.eth.Contract(UniswapV2Pair.abi, pair0);
     console.log(6, "newPair.methods =>", newPair.methods);
 
+    let balanceOfCMCLiquidity = await newPair.methods
+      .balanceOf(CMCLiquidityInstance.address)
+      .call();
+
+    console.log(
+      6,
+      "balanceOfCMCLiquidity =>",
+      balanceOfCMCLiquidity.toString()
+    );
+
+    let getCMCLPReserves = await newPair.methods.getReserves().call();
+
+    console.log(6, "getCMCLPReserves =>", getCMCLPReserves);
+
     // await newPair.methods
     //   .approve(CMCLiquidityInstance.address, 10000)
     //   .send({ from: accounts[0] });
