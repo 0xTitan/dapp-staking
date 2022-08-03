@@ -5,6 +5,7 @@ pragma solidity 0.8.13;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
 import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol";
+import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 /** Staking contract with reward for CMC token */
@@ -14,6 +15,8 @@ contract CMCLiquidity is Ownable {
     address public factory;
 
     event Log(string message, uint256 val);
+    event LogPairAddress(string message, address pairAddress);
+    event LogSendBackLPToMsgSenderSuccess(string message, bool result);
 
     constructor(address _router, address _factory) {
         router = _router;
@@ -46,9 +49,15 @@ contract CMCLiquidity is Ownable {
                 block.timestamp
             );
 
+        //get the address of the pair in order to send back to caller his LP token
+        address pair = IUniswapV2Factory(factory).getPair(_tokenA, _tokenB);
+        bool result = IUniswapV2Pair(pair).transfer(msg.sender, liquidity);
+
         emit Log("amountA", amountA);
         emit Log("amountB", amountB);
         emit Log("liquidity", liquidity);
+        emit LogPairAddress("pair", pair);
+        emit LogSendBackLPToMsgSenderSuccess("isLpBackToMsgSender", result);
     }
 
     function removeLiquidity(address _tokenA, address _tokenB) external {

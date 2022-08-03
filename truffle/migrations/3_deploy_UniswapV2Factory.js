@@ -128,6 +128,8 @@ module.exports = async function (deployer, network, accounts) {
     console.log(6, "lp.logs0 =>", lp.logs[0].args);
     console.log(6, "lp.logs1 =>", lp.logs[1].args);
     console.log(6, "lp.logs2 =>", lp.logs[2].args);
+    console.log(6, "lp.logs3 =>", lp.logs[3].args);
+    console.log(6, "lp.logs4 =>", lp.logs[4].args);
 
     console.log(
       6,
