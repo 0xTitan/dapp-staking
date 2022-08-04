@@ -122,11 +122,31 @@ module.exports = async function (deployer, network, accounts) {
       10000
     );
 
-    console.log(6, "lp.logs0 =>", lp.logs[0].args);
-    console.log(6, "lp.logs1 =>", lp.logs[1].args);
-    console.log(6, "lp.logs2 =>", lp.logs[2].args);
-    console.log(6, "lp.logs3 =>", lp.logs[3].args);
-    console.log(6, "lp.logs4 =>", lp.logs[4].args);
+    // console.log(6, "lp.logs0 =>", lp.logs[0].args);
+    // console.log(6, "lp.logs1 =>", lp.logs[1].args);
+    // console.log(6, "lp.logs2 =>", lp.logs[2].args);
+    // console.log(6, "lp.logs3 =>", lp.logs[3].args);
+    // console.log(6, "lp.logs4 =>", lp.logs[4].args);
+
+    console.log(
+      "CMC balanceOf account 1 before addliq =>",
+      (await CMCInstance.balanceOf(accounts[1])).toString()
+    );
+
+    console.log(
+      "FETH balanceOf account 1 before addliq =>",
+      (await FETHInstance.balanceOf(accounts[1])).toString()
+    );
+
+    console.log(
+      "CMC balanceOf CMC Liquidity before addliq =>",
+      (await CMCInstance.balanceOf(CMCLiquidityInstance.address)).toString()
+    );
+
+    console.log(
+      "FETH balanceOf CMC Liquidity before addliq =>",
+      (await FETHInstance.balanceOf(CMCLiquidityInstance.address)).toString()
+    );
 
     const lp2 = await CMCLiquidityInstance.addLiquidity(
       FETHInstance.address,
@@ -140,19 +160,19 @@ module.exports = async function (deployer, network, accounts) {
     console.log(6, "lp2.logs1 =>", lp2.logs[1].args);
     console.log(6, "lp2.logs2 =>", lp2.logs[2].args);
     console.log(6, "lp2.logs3 =>", lp2.logs[3].args);
-    console.log(6, "lp2.logs4 =>", lp2.logs[4].args);
+    // console.log(6, "lp2.logs4 =>", lp2.logs[4].args);
 
-    console.log(
-      6,
-      "allPairsLength after addLiquidity",
-      (await UniswapV2FactoryInstance.allPairsLength()).toString()
-    );
+    // console.log(
+    //   6,
+    //   "allPairsLength after addLiquidity",
+    //   (await UniswapV2FactoryInstance.allPairsLength()).toString()
+    // );
 
     const pair0 = await UniswapV2FactoryInstance.allPairs(0);
-    console.log(6, "pair0 =>", pair0);
+    // console.log(6, "pair0 =>", pair0);
 
     let newPair = new web3.eth.Contract(UniswapV2Pair.abi, pair0);
-    console.log(6, "newPair.methods =>", newPair.methods);
+    // console.log(6, "newPair.methods =>", newPair.methods);
 
     let LP_BalanceOfAccounts0 = await newPair.methods
       .balanceOf(accounts[0])
@@ -174,14 +194,32 @@ module.exports = async function (deployer, network, accounts) {
       LP_BalanceOfAccounts1.toString()
     );
 
+    console.log(
+      "CMC balanceOf account 1 after addliq =>",
+      (await CMCInstance.balanceOf(accounts[1])).toString()
+    );
+
+    console.log(
+      "FETH balanceOf account 1 after addliq =>",
+      (await FETHInstance.balanceOf(accounts[1])).toString()
+    );
+
+    console.log(
+      "CMC balanceOf CMC Liquidity after addliq =>",
+      (await CMCInstance.balanceOf(CMCLiquidityInstance.address)).toString()
+    );
+
+    console.log(
+      "FETH balanceOf CMC Liquidity after addliq =>",
+      (await FETHInstance.balanceOf(CMCLiquidityInstance.address)).toString()
+    );
+
     const address0 = "0x0000000000000000000000000000000000000000";
     let LP_BalanceOfAddress0 = await newPair.methods.balanceOf(address0).call();
-
     console.log(6, "LP balanceOfAddress0 =>", LP_BalanceOfAddress0.toString());
 
     let getCMCLPReserves = await newPair.methods.getReserves().call();
-
-    console.log(6, "getCMCLPReserves =>", getCMCLPReserves);
+    // console.log(6, "getCMCLPReserves =>", getCMCLPReserves);
 
     console.log(6, "development finish");
 

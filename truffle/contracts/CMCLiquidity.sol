@@ -17,6 +17,12 @@ contract CMCLiquidity is Ownable {
     event Log(string message, uint256 val);
     event LogPairAddress(string message, address pairAddress);
     event LogSendBackLPToMsgSenderSuccess(string message, bool result);
+    event LogSendBackTokenToMsgSenderSuccess(
+        string message,
+        bool isTokenInCMC_LiqContract,
+        uint256 amount,
+        bool success
+    );
 
     constructor(address _router, address _factory) {
         router = _router;
@@ -52,6 +58,57 @@ contract CMCLiquidity is Ownable {
         //get the address of the pair in order to send back to caller his LP token
         address pair = IUniswapV2Factory(factory).getPair(_tokenA, _tokenB);
         bool result = IUniswapV2Pair(pair).transfer(msg.sender, liquidity);
+
+        //get tokens sent in excess to this contract and send back to caller his tokens
+        uint256 contractBalanceTokenA = IERC20(_tokenA).balanceOf(
+            address(this)
+        );
+        emit Log("Balance Token A", contractBalanceTokenA);
+
+        if (contractBalanceTokenA > 0) {
+            bool success = IERC20(_tokenA).transfer(
+                msg.sender,
+                contractBalanceTokenA
+            );
+            emit LogSendBackTokenToMsgSenderSuccess(
+                "isTokenInExcess",
+                true,
+                contractBalanceTokenA,
+                success
+            );
+        } else {
+            emit LogSendBackTokenToMsgSenderSuccess(
+                "isTokenInExcess",
+                false,
+                contractBalanceTokenA,
+                false
+            );
+        }
+
+        uint256 contractBalanceTokenB = IERC20(_tokenB).balanceOf(
+            address(this)
+        );
+        emit Log("Balance Token B", contractBalanceTokenB);
+
+        if (contractBalanceTokenB > 0) {
+            bool success = IERC20(_tokenB).transfer(
+                msg.sender,
+                contractBalanceTokenB
+            );
+            emit LogSendBackTokenToMsgSenderSuccess(
+                "isTokenInExcess",
+                true,
+                contractBalanceTokenB,
+                success
+            );
+        } else {
+            emit LogSendBackTokenToMsgSenderSuccess(
+                "isTokenInExcess",
+                false,
+                contractBalanceTokenB,
+                false
+            );
+        }
 
         emit Log("amountA", amountA);
         emit Log("amountB", amountB);
