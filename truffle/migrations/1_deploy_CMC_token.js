@@ -1,5 +1,5 @@
 const CMC = artifacts.require("CMC");
-const CMCStaking = artifacts.require("CMCStaking");
+// const CMCStaking = artifacts.require("CMCStaking");
 
 module.exports = async function (deployer, network, accounts) {
   let decimals = web3.utils.toBN(18);
