@@ -11,6 +11,7 @@ const UniswapV2Pair = contract(jsonPair);
 const CMC = artifacts.require("CMC");
 const FETH = artifacts.require("FETH");
 const addressWETHRopsten = "0xc778417E063141139Fce010982780140Aa0cD5Ab";
+const addressWETHKovan = "0xd0A1E359811322d97991E03f863a0C30C2cF029C";
 
 UniswapV2Factory.setProvider(web3._provider);
 UniswapV2Router.setProvider(web3._provider);
@@ -233,14 +234,14 @@ module.exports = async function (deployer, network, accounts) {
       .send({ from: accounts[0] });
     console.log(6, "approved CMCLiquidityInstance for WETH");
 
-    let approve2 = await CMCInstance.approve(
+    let approve = await CMCInstance.approve(
       CMCLiquidityInstance.address,
       10000000
     );
     console.log(
-      7,
+      6,
       "approved CMCLiquidityInstance for CMC =>",
-      approve2.logs[0].args
+      approve.logs[0].args
     );
 
     const lp = await CMCLiquidityInstance.addLiquidity(
@@ -255,9 +256,69 @@ module.exports = async function (deployer, network, accounts) {
     console.log(6, "lp.logs2 =>", lp.logs[2].args);
 
     console.log(6, "ropsten finish");
+
+    ////////////////////////////
   } else if (network === "kovan") {
     console.log(6, "kovan start");
-    // to complement
+
+    let weth = new web3.eth.Contract(ERC20.abi, addressWETHKovan);
+
+    await weth.methods
+      .approve(CMCLiquidityInstance.address, 10000000)
+      .send({ from: accounts[0] });
+    console.log(6, "approved CMCLiquidityInstance for WETH accounts[0]");
+
+    let approve = await CMCInstance.approve(
+      CMCLiquidityInstance.address,
+      10000000
+    );
+
+    console.log(
+      6,
+      "approved CMCLiquidityInstance for CMC accounts[0] =>",
+      approve.logs[0].args
+    );
+
+    const lp = await CMCLiquidityInstance.addLiquidity(
+      addressWETHKovan,
+      CMCInstance.address,
+      10000000,
+      10000000
+    );
+
+    console.log(6, "lp.logs0 =>", lp.logs[0].args);
+    console.log(6, "lp.logs1 =>", lp.logs[1].args);
+    console.log(6, "lp.logs2 =>", lp.logs[2].args);
+
+    console.log(
+      6,
+      "allPairsLength after addLiquidity",
+      (await UniswapV2FactoryInstance.allPairsLength()).toString()
+    );
+
+    const pair0 = await UniswapV2FactoryInstance.allPairs(0);
+    console.log(6, "pair0 =>", pair0);
+
+    let newPair = new web3.eth.Contract(UniswapV2Pair.abi, pair0);
+    // console.log(6, "newPair.methods =>", newPair.methods);
+
+    let LP_BalanceOfAccounts0 = await newPair.methods
+      .balanceOf(accounts[0])
+      .call();
+
+    console.log(
+      6,
+      "LP balanceOfAccounts0 =>",
+      LP_BalanceOfAccounts0.toString()
+    );
+
+    const address0 = "0x0000000000000000000000000000000000000000";
+    let LP_BalanceOfAddress0 = await newPair.methods.balanceOf(address0).call();
+    console.log(6, "LP balanceOfAddress0 =>", LP_BalanceOfAddress0.toString());
+
+    let getCMCLPReserves = await newPair.methods.getReserves().call();
+    console.log(6, "getCMCLPReserves =>", getCMCLPReserves);
+
     console.log(6, "kovan finish");
   }
 

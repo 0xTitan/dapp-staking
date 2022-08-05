@@ -4,6 +4,7 @@
   "description": "Truffle project with SimpleStorage contract",
   "main": "truffle-config.js",
   "dependencies": {
+    "@chainlink/contracts": "^0.4.2",
     "@openzeppelin/contracts": "^4.7.1",
     "@openzeppelin/test-helpers": "^0.5.15",
     "@truffle/hdwallet-provider": "^2.0.12",
