@@ -6,15 +6,18 @@ import "../node_modules/@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Int
 contract Chainlink {
     AggregatorV3Interface internal priceFeed;
 
-    /** * Network: Kovan 
+    /*  Network: Kovan
+        https://docs.chain.link/docs/ethereum-addresses/#Kovan%20Testnet 
 
-    * Aggregator: BNB/USD 
+        Aggregator: ETH/USD 
 
-    * Address: 0x8993ED705cdf5e84D0a3B754b5Ee0e1783fcdF16 */
+        Address: 0x9326BFA02ADD2366b30bacB125260Af641031331 
+        Constructor set on this pair at deployment but can be changed for another pair with setAddr() function.
+    */
 
     constructor() {
         priceFeed = AggregatorV3Interface(
-            0x8993ED705cdf5e84D0a3B754b5Ee0e1783fcdF16
+            0x9326BFA02ADD2366b30bacB125260Af641031331
         );
     } /** * Returns the latest price */
 
