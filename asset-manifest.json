@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/dapp-staking/static/css/main.f6e3a394.chunk.css",
-    "main.js": "/dapp-staking/static/js/main.a692dc88.chunk.js",
-    "main.js.map": "/dapp-staking/static/js/main.a692dc88.chunk.js.map",
+    "main.js": "/dapp-staking/static/js/main.8371dc19.chunk.js",
+    "main.js.map": "/dapp-staking/static/js/main.8371dc19.chunk.js.map",
     "runtime-main.js": "/dapp-staking/static/js/runtime-main.f62de08f.js",
     "runtime-main.js.map": "/dapp-staking/static/js/runtime-main.f62de08f.js.map",
     "static/js/2.b73c3393.chunk.js": "/dapp-staking/static/js/2.b73c3393.chunk.js",
@@ -15,6 +15,6 @@
     "static/js/runtime-main.f62de08f.js",
     "static/js/2.b73c3393.chunk.js",
     "static/css/main.f6e3a394.chunk.css",
-    "static/js/main.a692dc88.chunk.js"
+    "static/js/main.8371dc19.chunk.js"
   ]
 }
