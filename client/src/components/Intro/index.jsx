@@ -19,6 +19,8 @@ function Intro({ userInfo, refreshBalance, refreshOwner }) {
   } = useEth();
 
   const [userAddress, setUserAddress] = useState(null);
+  console.log("userAddress =>", userAddress);
+
   const [contractAddress, setContractAddress] = useState(null);
   const [balance, setBalance] = useState(0);
   const [balanceCMC, setBalanceCMC] = useState(0);

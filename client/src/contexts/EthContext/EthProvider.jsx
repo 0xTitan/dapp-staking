@@ -76,7 +76,6 @@ function EthProvider({ children }) {
             artifactChainlink["abi"],
             addressChainlink
           );
-          console.log("addressChainlink =>", addressChainlink);
         } catch (err) {
           console.error(err);
         }
@@ -87,12 +86,14 @@ function EthProvider({ children }) {
             artifactCMCStaking,
             artifactCMCLiquidity,
             artifactERC20,
+            artifactChainlink,
             web3,
             accounts,
             networkID,
             contractCMC,
             contractCMCStaking,
             contractCMCLiquidity,
+            contractChainlink,
             addressCMC,
             addressCMCStaking,
             addressCMCLiquidity,
@@ -136,7 +137,8 @@ function EthProvider({ children }) {
         state.artifactCMC,
         state.artifactCMCStaking,
         state.artifactCMCLiquidity,
-        state.artifactERC20
+        state.artifactERC20,
+        state.artifactChainlink
       );
     };
 
