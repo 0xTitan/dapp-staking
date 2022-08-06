@@ -46,3 +46,8 @@
   display: flex;
   flex-direction: row;
 }
+
+.withdrawLiquidity-lp,
+.withdrawLiquidity-remove {
+  margin: 0px 7px;
+}

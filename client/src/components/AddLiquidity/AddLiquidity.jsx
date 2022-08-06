@@ -15,8 +15,8 @@ function AddLiquidity(props) {
     refreshBalance,
   } = props;
 
-  //   const addressWETHRopsten = "0xc778417E063141139Fce010982780140Aa0cD5Ab";
-  const addressWETHRopsten = "0x94A5371dBF1112C7fA2dd038D22d9B3EcF7C7305";
+  //const addressWETHRopsten = "0xc778417E063141139Fce010982780140Aa0cD5Ab";
+  const addressWETHRopsten = "0xbf4c0a77A3072FDaFC60e5758bC0243d40358f29";
 
   const [tokenAmountToAddCMC, setTokenAmountToAddCMC] = useState(
     "Enter CMC Token amount you want to add"
@@ -28,11 +28,13 @@ function AddLiquidity(props) {
 
   const [pairAdress, SetPairAdress] = useState(0);
   const [lpAmount, setLPAmount] = useState(0);
+  const [lpStakedAmount, setLPStakedAmount] = useState(0);
   const [rewardEarn, setRewardEarn] = useState(0);
 
   useEffect(() => {
     getPairAdress();
     getLPBalance();
+    getLPStaked();
     //start timer to display reward
     const interval = setInterval(() => {
       getReward();
@@ -65,11 +67,8 @@ function AddLiquidity(props) {
   };
 
   const handleAddLiquidity = async () => {
-    console.log(contractCMCLiquidity);
     const amountCMC = web3.utils.toBN(tokenAmountToAddCMC * 1e18);
     const amountWETH = web3.utils.toBN(tokenAmountToAddWETH * 1e18);
-    console.log("amountCMC : " + amountCMC);
-    console.log("amountWETH : " + amountWETH);
     //const qtyCMC = amountCMC.mul(web3.utils.toBN(10).pow(decimals));
     //const qtyWETH = amountWETH.mul(web3.utils.toBN(10).pow(decimals));
 
@@ -100,7 +99,7 @@ function AddLiquidity(props) {
         // const transact = await contractCMC.methods
         //   .mint(mintQty)
         //   .send({ from: accounts[0] });
-        console.log(transac);
+
         refreshBalance("refresh after add liquidity");
         setTokenAmountToAddCMC("");
         setTokenAmountToAddWETH("");
@@ -113,14 +112,13 @@ function AddLiquidity(props) {
   /************************Handle stake liquidity************************** */
 
   const handleStakeLiquidity = async () => {
-    const amount = lpAmount * 1e18;
+    const amount = 0.1 * 1e18;
     const stakeQty = web3.utils.toBN(amount);
-    console.log(amount);
-    console.log(stakeQty);
     const contractPair = new web3.eth.Contract(
       artifactERC20["abi"],
       pairAdress
     );
+
     //we approve cmc liquidity contract to manage LP and stake them
     const approved = await contractPair.methods
       .approve(addressCMCLiquidity, stakeQty)
@@ -137,9 +135,6 @@ function AddLiquidity(props) {
         refreshBalance("refresh after stake lp");
       } catch (error) {
         console.log(error);
-        console.log(transac);
-        console.log(await contractCMCLiquidity.methods.stakingToken().call());
-        console.log(await contractCMCLiquidity.methods.rewardsToken().call());
       }
     }
   };
@@ -181,7 +176,7 @@ function AddLiquidity(props) {
   /************************Withdraw LP************************** */
 
   const handleWithdrawLiquidity = async () => {
-    const amount = lpAmount * 1e18;
+    const amount = lpStakedAmount * 1e18;
     const stakeQty = web3.utils.toBN(amount);
     const transact = await contractCMCLiquidity.methods
       .withdraw(stakeQty)
@@ -219,6 +214,18 @@ function AddLiquidity(props) {
     setLPAmount(valueLP);
   };
 
+  const getLPStaked = async () => {
+    const balance =
+      contractCMCLiquidity &&
+      (await contractCMCLiquidity.methods.balanceOf(accounts[0]).call());
+
+    let valueLP = web3
+      ? web3.utils.fromWei(web3.utils.toBN(balance), "ether")
+      : 0;
+
+    setLPStakedAmount(valueLP);
+  };
+
   /***********************Get reward info*********************** */
   const getReward = async () => {
     if (contractCMCLiquidity) {
@@ -228,17 +235,6 @@ function AddLiquidity(props) {
       reward = web3 ? web3.utils.fromWei(reward, "ether") : 0;
       setRewardEarn(reward);
     }
-  };
-
-  const getLPHeldByContract = async () => {
-    // if (contractCMCStaking) {
-    let balance =
-      contractCMCLiquidity &&
-      (await contractCMCLiquidity.methods.balanceOf(accounts[0]).call());
-    console.log("balance held by contract : " + balance);
-    //   reward = web3 ? web3.utils.fromWei(reward, "ether") : 0;
-    //   setRewardEarn(reward);
-    // }
   };
 
   const getPairAdress = async () => {
@@ -260,6 +256,11 @@ function AddLiquidity(props) {
       <div className="lp-info">
         <div>
           <span className="admin-instruction">lp amount : {lpAmount}</span>
+        </div>
+        <div>
+          <span className="admin-instruction">
+            | lp staked : {lpStakedAmount}
+          </span>
         </div>
         <div>
           <span className="admin-instruction">
@@ -304,7 +305,7 @@ function AddLiquidity(props) {
         </div>
       </div>
       <div className="withdrawLiquidity-operation">
-        <div className="stakeLiquidity-remove">
+        <div className="stakeLiquidity-stake">
           <button
             type="button"
             className="stakeLiquidity-button"
@@ -317,17 +318,17 @@ function AddLiquidity(props) {
         <div className="withdrawLiquidity-remove">
           <button
             type="button"
-            className="withdrawLiquidity-button"
+            className="removeLiquidity-button"
             onClick={handleRemoveLiquidity}
             disabled={!lpAmount > 0}
           >
             <span>Remove LP</span>
           </button>
         </div>
-        <div className="withdrawLiquidity-remove">
+        <div className="withdrawLiquidity-lp">
           <button
             type="button"
-            className="withdrawLiquidity-button"
+            className="withdrawLiquidityLp-button"
             onClick={handleWithdrawLiquidity}
             disabled={!lpAmount > 0}
           >

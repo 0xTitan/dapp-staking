@@ -64,9 +64,6 @@ contract CMCLiquidity is CMCStaking {
         address pair = IUniswapV2Factory(factory).getPair(_tokenA, _tokenB);
         bool result = IUniswapV2Pair(pair).transfer(msg.sender, liquidity);
 
-        //update balance
-        balanceOf[msg.sender] += liquidity;
-
         //get tokens sent in excess to this contract and send back to caller his tokens
         uint256 contractBalanceTokenA = IERC20(_tokenA).balanceOf(
             address(this)
@@ -131,9 +128,9 @@ contract CMCLiquidity is CMCStaking {
         require(liquidity > 0, "You do not have any LP token");
         //transfer LP back to contract
         IERC20(pair).transferFrom(msg.sender, address(this), liquidity);
-        //approve touter from this contract
+        //approve router from this contract
         IERC20(pair).approve(router, liquidity);
-        //get back token
+        //get token back
         (uint256 amountA, uint256 amountB) = IUniswapV2Router02(router)
             .removeLiquidity(
                 _tokenA,
@@ -144,8 +141,6 @@ contract CMCLiquidity is CMCStaking {
                 address(this),
                 block.timestamp
             );
-
-        balanceOf[msg.sender] -= liquidity;
         IERC20(_tokenA).transfer(msg.sender, amountA);
         IERC20(_tokenB).transfer(msg.sender, amountB);
         emit Log("amountA", amountA);

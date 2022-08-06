@@ -48,14 +48,12 @@ module.exports = async function (deployer, network, accounts) {
   );
   console.log(4);
 
+  const CMCInstance = await CMC.deployed();
+  console.log("CMC address =>", CMCInstance.address);
+  console.log(5);
   //////////////////////////////
 
   if (network === "development") {
-    const CMCInstance = await CMC.deployed();
-    console.log("CMC address =>", CMCInstance.address);
-
-    console.log(5);
-
     console.log(6, "development start");
 
     await deployer.deploy(FETH);
