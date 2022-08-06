@@ -1,20 +1,20 @@
 {
   "files": {
     "main.css": "/dapp-staking/static/css/main.f6e3a394.chunk.css",
-    "main.js": "/dapp-staking/static/js/main.6785234a.chunk.js",
-    "main.js.map": "/dapp-staking/static/js/main.6785234a.chunk.js.map",
+    "main.js": "/dapp-staking/static/js/main.a692dc88.chunk.js",
+    "main.js.map": "/dapp-staking/static/js/main.a692dc88.chunk.js.map",
     "runtime-main.js": "/dapp-staking/static/js/runtime-main.f62de08f.js",
     "runtime-main.js.map": "/dapp-staking/static/js/runtime-main.f62de08f.js.map",
-    "static/js/2.b50f353b.chunk.js": "/dapp-staking/static/js/2.b50f353b.chunk.js",
-    "static/js/2.b50f353b.chunk.js.map": "/dapp-staking/static/js/2.b50f353b.chunk.js.map",
+    "static/js/2.b73c3393.chunk.js": "/dapp-staking/static/js/2.b73c3393.chunk.js",
+    "static/js/2.b73c3393.chunk.js.map": "/dapp-staking/static/js/2.b73c3393.chunk.js.map",
     "index.html": "/dapp-staking/index.html",
     "static/css/main.f6e3a394.chunk.css.map": "/dapp-staking/static/css/main.f6e3a394.chunk.css.map",
-    "static/js/2.b50f353b.chunk.js.LICENSE.txt": "/dapp-staking/static/js/2.b50f353b.chunk.js.LICENSE.txt"
+    "static/js/2.b73c3393.chunk.js.LICENSE.txt": "/dapp-staking/static/js/2.b73c3393.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.f62de08f.js",
-    "static/js/2.b50f353b.chunk.js",
+    "static/js/2.b73c3393.chunk.js",
     "static/css/main.f6e3a394.chunk.css",
-    "static/js/main.6785234a.chunk.js"
+    "static/js/main.a692dc88.chunk.js"
   ]
 }
