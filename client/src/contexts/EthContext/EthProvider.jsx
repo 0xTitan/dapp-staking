@@ -27,43 +27,39 @@ function EthProvider({ children }) {
           isOwnerCMCStaking,
           isOwnerCMCLiquidity;
         try {
-          if (networkID) {
-            //CMC
-            addressCMC = artifactCMC.networks[networkID].address;
-            contractCMC = new web3.eth.Contract(artifactCMC["abi"], addressCMC);
-            isOwnerCMC =
-              (await contractCMC.methods
-                .owner()
-                .call({ from: accounts[0] })) === accounts[0];
-            console.log("isOwnerCMC : " + isOwnerCMC);
-            //CMC STaking
-            addressCMCStaking = artifactCMCStaking.networks[networkID].address;
-            contractCMCStaking = new web3.eth.Contract(
-              artifactCMCStaking["abi"],
-              addressCMCStaking
-            );
-            isOwnerCMCStaking =
-              (await contractCMCStaking.methods
-                .owner()
-                .call({ from: accounts[0] })) === accounts[0];
-            console.log("isOwnerCMCStaking : " + isOwnerCMCStaking);
-            console.log("networkID : " + networkID);
+          //CMC
+          addressCMC = artifactCMC.networks[networkID].address;
+          contractCMC = new web3.eth.Contract(artifactCMC["abi"], addressCMC);
+          isOwnerCMC =
+            (await contractCMC.methods.owner().call({ from: accounts[0] })) ===
+            accounts[0];
+          console.log("isOwnerCMC : " + isOwnerCMC);
+          //CMC STaking
+          addressCMCStaking = artifactCMCStaking.networks[networkID].address;
+          contractCMCStaking = new web3.eth.Contract(
+            artifactCMCStaking["abi"],
+            addressCMCStaking
+          );
+          isOwnerCMCStaking =
+            (await contractCMCStaking.methods
+              .owner()
+              .call({ from: accounts[0] })) === accounts[0];
+          console.log("isOwnerCMCStaking : " + isOwnerCMCStaking);
+          console.log("networkID : " + networkID);
 
-            //CMC Liquidity
-            if (artifactCMCLiquidity) {
-              addressCMCLiquidity =
-                artifactCMCLiquidity.networks[networkID].address;
-              contractCMCLiquidity = new web3.eth.Contract(
-                artifactCMCLiquidity["abi"],
-                addressCMCLiquidity
-              );
-              isOwnerCMCLiquidity =
-                (await contractCMCLiquidity.methods
-                  .owner()
-                  .call({ from: accounts[0] })) === accounts[0];
-              console.log("isOwnerCMCLiquidity : " + isOwnerCMCLiquidity);
-            }
-          }
+          //CMC Liquidity
+
+          addressCMCLiquidity =
+            artifactCMCLiquidity.networks[networkID].address;
+          contractCMCLiquidity = new web3.eth.Contract(
+            artifactCMCLiquidity["abi"],
+            addressCMCLiquidity
+          );
+          isOwnerCMCLiquidity =
+            (await contractCMCLiquidity.methods
+              .owner()
+              .call({ from: accounts[0] })) === accounts[0];
+          console.log("isOwnerCMCLiquidity : " + isOwnerCMCLiquidity);
         } catch (err) {
           console.error(err);
         }
@@ -117,14 +113,25 @@ function EthProvider({ children }) {
   useEffect(() => {
     const events = ["chainChanged", "accountsChanged"];
     const handleChange = () => {
-      init(state.artifactCMC, state.artifactCMCStaking);
+      init(
+        state.artifactCMC,
+        state.artifactCMCStaking,
+        state.artifactCMCLiquidity,
+        state.artifactERC20
+      );
     };
 
     events.forEach((e) => window.ethereum.on(e, handleChange));
     return () => {
       events.forEach((e) => window.ethereum.removeListener(e, handleChange));
     };
-  }, [init, state.artifactCMC, state.artifactCMCStaking]);
+  }, [
+    init,
+    state.artifactCMC,
+    state.artifactCMCStaking,
+    state.artifactCMCLiquidity,
+    state.artifactERC20,
+  ]);
 
   return (
     <EthContext.Provider

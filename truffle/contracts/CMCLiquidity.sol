@@ -13,6 +13,8 @@ contract CMCLiquidity is Ownable {
     address private constant WETH = 0xc778417E063141139Fce010982780140Aa0cD5Ab;
     address public router;
     address public factory;
+    // User address => staked amount
+    mapping(address => uint256) public balanceOf;
 
     event Log(string message, uint256 val);
     event LogPairAddress(string message, address pairAddress);
@@ -58,6 +60,8 @@ contract CMCLiquidity is Ownable {
         //get the address of the pair in order to send back to caller his LP token
         address pair = IUniswapV2Factory(factory).getPair(_tokenA, _tokenB);
         bool result = IUniswapV2Pair(pair).transfer(msg.sender, liquidity);
+
+        balanceOf[msg.sender] += liquidity;
 
         //get tokens sent in excess to this contract and send back to caller his tokens
         uint256 contractBalanceTokenA = IERC20(_tokenA).balanceOf(
@@ -119,10 +123,13 @@ contract CMCLiquidity is Ownable {
 
     function removeLiquidity(address _tokenA, address _tokenB) external {
         address pair = IUniswapV2Factory(factory).getPair(_tokenA, _tokenB);
-        uint256 liquidity = IERC20(pair).balanceOf(address(this));
-
+        uint256 liquidity = IERC20(pair).balanceOf(msg.sender);
+        require(liquidity > 0, "You do not have any LP token");
+        //transfer LP back to contract
+        IERC20(pair).transferFrom(msg.sender, address(this), liquidity);
+        //approve touter from this contract
         IERC20(pair).approve(router, liquidity);
-
+        //get back token
         (uint256 amountA, uint256 amountB) = IUniswapV2Router02(router)
             .removeLiquidity(
                 _tokenA,
@@ -134,7 +141,19 @@ contract CMCLiquidity is Ownable {
                 block.timestamp
             );
 
+        balanceOf[msg.sender] -= liquidity;
+        IERC20(_tokenA).transfer(msg.sender, amountA);
+        IERC20(_tokenB).transfer(msg.sender, amountB);
         emit Log("amountA", amountA);
         emit Log("amountB", amountB);
+    }
+
+    function getPairAdress(address _tokenA, address _tokenB)
+        public
+        view
+        returns (address)
+    {
+        address pair = IUniswapV2Factory(factory).getPair(_tokenA, _tokenB);
+        return pair;
     }
 }

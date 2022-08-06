@@ -3,11 +3,11 @@
 pragma solidity 0.8.13;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "./CMC.sol";
 
 /** Staking contract with reward for CMC token */
 contract CMCStaking is Ownable {
-    CMC public immutable stakingToken;
+    IERC20 public immutable stakingToken;
+    IERC20 public immutable rewardsToken;
 
     // Duration of rewards to be paid out (in seconds)
     uint256 public duration;
@@ -30,7 +30,8 @@ contract CMCStaking is Ownable {
     mapping(address => uint256) public balanceOf;
 
     constructor(address _stakingToken) {
-        stakingToken = CMC(_stakingToken);
+        stakingToken = IERC20(_stakingToken);
+        rewardsToken = IERC20(_rewardToken);
     }
 
     /**@notice update reward 
@@ -113,8 +114,8 @@ contract CMCStaking is Ownable {
         uint256 reward = rewards[msg.sender];
         if (reward > 0) {
             rewards[msg.sender] = 0;
-            stakingToken.mintReward(reward);
-            stakingToken.transfer(msg.sender, reward);
+            rewardsToken.mintReward(reward);
+            rewardsToken.transfer(msg.sender, reward);
         }
     }
 
@@ -149,8 +150,8 @@ contract CMCStaking is Ownable {
 
         require(rewardRate > 0, "reward rate = 0");
         require(
-            _amount + stakingToken.totalSupply() <=
-                stakingToken.maxTotalSupply(),
+            _amount + rewardsToken.totalSupply() <=
+                rewardsToken.maxTotalSupply(),
             "reward amount will exceed total supply"
         );
 

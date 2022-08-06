@@ -9,10 +9,11 @@
   justify-content: flex-start;
 }
 
-.addLiquidity-operation {
+.addLiquidity-operation,
+.withdrawLiquidity-operation {
   margin-top: 20px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
 }
 
