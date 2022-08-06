@@ -10,7 +10,8 @@ contract CMC is ERC20, Ownable {
     uint256 public maxTotalSupply = 20000000 * 10**decimals();
     uint256 public maxSupplyMintable = 10000000 * 10**decimals();
     uint256 public mintedSupply;
-    address public stakingContract;
+    //addess mapping to list allowed contract to mintReward
+    mapping(address => bool) whitelistedAddresses;
 
     constructor(uint256 _initialSupply, uint256 _mintedSupply)
         ERC20("CAMACLE", "CMC")
@@ -47,14 +48,14 @@ contract CMC is ERC20, Ownable {
         external
         onlyOwner
     {
-        stakingContract = contractAddress;
+        whitelistedAddresses[contractAddress] = true;
     }
 
     /**@notice allow stakingContract to mintReward
      * @param amount amout of token to mint
      */
     function mintReward(uint256 amount) external {
-        require(msg.sender == stakingContract, "You cannot mint reward");
+        require(whitelistedAddresses[msg.sender], "You cannot mint reward");
         //mint tokens
         _mint(msg.sender, amount);
     }

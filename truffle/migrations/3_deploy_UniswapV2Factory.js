@@ -48,27 +48,51 @@ module.exports = async function (deployer, network, accounts) {
   );
   console.log(4);
 
-  await deployer.deploy(
-    CMCLiquidity,
-    UniswapV2RouterInstance.address,
-    UniswapV2FactoryInstance.address
-  );
-  const CMCLiquidityInstance = await CMCLiquidity.deployed();
-  console.log("CMCLiquidityInstance address =>", CMCLiquidityInstance.address);
-
-  const CMCInstance = await CMC.deployed();
-  console.log("CMC address =>", CMCInstance.address);
-
-  console.log(5);
-
   //////////////////////////////
 
   if (network === "development") {
+    const CMCInstance = await CMC.deployed();
+    console.log("CMC address =>", CMCInstance.address);
+
+    console.log(5);
+
     console.log(6, "development start");
 
     await deployer.deploy(FETH);
     const FETHInstance = await FETH.deployed();
     console.log(6, "FETH address =>", FETHInstance.address);
+
+    const createPair = await UniswapV2FactoryInstance.createPair(
+      FETHInstance.address,
+      CMCInstance.address,
+      { from: accounts[0] }
+    );
+
+    const pair = await UniswapV2FactoryInstance.allPairs(0);
+
+    console.log(6, "pair0 =>", pair);
+
+    await deployer.deploy(
+      CMCLiquidity,
+      UniswapV2RouterInstance.address,
+      UniswapV2FactoryInstance.address,
+      pair,
+      CMCInstance.address
+    );
+
+    const CMCLiquidityInstance = await CMCLiquidity.deployed();
+    console.log(
+      "CMCLiquidityInstance address =>",
+      CMCLiquidityInstance.address
+    );
+
+    console.log(
+      await CMCLiquidityInstance.getPairAdress(
+        FETHInstance.address,
+        CMCInstance.address
+      )
+    );
+
     let decimals = web3.utils.toBN(18);
     let mintedQtyToOwner = web3.utils.toBN(1000);
 
@@ -226,6 +250,28 @@ module.exports = async function (deployer, network, accounts) {
 
     //////////////////////////////
   } else if (network === "ropsten") {
+    const createPair = await UniswapV2FactoryInstance.createPair(
+      addressWETHRopsten,
+      CMCInstance.address,
+      { from: accounts[0] }
+    );
+
+    const pair = await UniswapV2FactoryInstance.allPairs(0);
+
+    console.log(6, "pair0 =>", pair);
+
+    await deployer.deploy(
+      CMCLiquidity,
+      UniswapV2RouterInstance.address,
+      UniswapV2FactoryInstance.address,
+      pair,
+      CMCInstance.address
+    );
+    const CMCLiquidityInstance = await CMCLiquidity.deployed();
+    console.log(
+      "CMCLiquidityInstance address =>",
+      CMCLiquidityInstance.address
+    );
     console.log(6, "ropsten start");
 
     let weth = new web3.eth.Contract(ERC20.abi, addressWETHRopsten);
@@ -262,6 +308,24 @@ module.exports = async function (deployer, network, accounts) {
     console.log(6, "kovan start");
 
     let weth = new web3.eth.Contract(ERC20.abi, addressWETHKovan);
+
+    const createPair = await UniswapV2FactoryInstance.createPair(
+      addressWETHKovan,
+      CMCInstance.address,
+      { from: accounts[0] }
+    );
+
+    const pair = await UniswapV2FactoryInstance.allPairs(0);
+
+    console.log(6, "pair0 =>", pair);
+
+    await deployer.deploy(
+      CMCLiquidity,
+      UniswapV2RouterInstance.address,
+      UniswapV2FactoryInstance.address,
+      pair,
+      CMCInstance.address
+    );
 
     await weth.methods
       .approve(CMCLiquidityInstance.address, 10000000)

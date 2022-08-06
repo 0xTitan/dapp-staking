@@ -2,8 +2,14 @@ import { useState, useEffect } from "react";
 import "./StakingAdmin.css";
 
 function StakingAdmin(props) {
-  const { contractCMC, contractCMCStaking, addressCMCStaking, accounts, web3 } =
-    props;
+  const {
+    contractCMC,
+    contractCMCStaking,
+    addressCMCStaking,
+    accounts,
+    web3,
+    adminInstruction,
+  } = props;
   const [duration, setDuration] = useState("Enter reward duration in (s)");
   const [hasDuration, setHasDuration] = useState(false);
   const [tokenAmount, setTokenAmount] = useState(
@@ -97,75 +103,75 @@ function StakingAdmin(props) {
   };
 
   return (
-    <div className="stakingAdmin-main">
-      <span className="admin-instruction">
-        Admin please proceed with staking program configuration
-      </span>
-      <div className="stakingAdmin-info">
-        <div>
-          <span className="admin-instruction">
-            Current block time is : {blockTimestamp}
-          </span>
+    <>
+      <div className="stakingAdmin-main">
+        <span className="admin-instruction">{adminInstruction}</span>
+        <div className="stakingAdmin-info">
+          <div>
+            <span className="admin-instruction">
+              Current block time is : {blockTimestamp}
+            </span>
+          </div>
+          <div>
+            <span className="admin-instruction">
+              | Program finish at : {finishAt}
+            </span>
+          </div>
         </div>
-        <div>
-          <span className="admin-instruction">
-            | Program finish at : {finishAt}
-          </span>
-        </div>
-      </div>
-      <div className="stakingAdmin-duration">
-        <div className="duration-input">
-          <input
-            className="duration-inputTxt"
-            name="duration"
-            type="text"
-            id="duration"
-            value={duration}
-            onChange={(e) => handleDurationChange(e)}
-            disabled={hasDuration}
-          ></input>
-          <button
-            type="button"
-            className="duration-button"
-            onClick={handleSetDuration}
-            disabled={duration <= 0 || hasDuration}
-          >
-            <span>Set duration</span>
-          </button>
-        </div>
-        <div className="stakingAdmin-tokenAmount">
-          <div className="tokenAmount-input">
+        <div className="stakingAdmin-duration">
+          <div className="duration-input">
             <input
-              className="tokenAmount-inputTxt"
-              name="tokenAmount"
+              className="duration-inputTxt"
+              name="duration"
               type="text"
-              id="tokenAmount"
-              value={tokenAmount}
-              onChange={(e) => handleSetTokenAmountChange(e)}
-              // disabled={hasTokenAmount}
+              id="duration"
+              value={duration}
+              onChange={(e) => handleDurationChange(e)}
+              disabled={hasDuration}
             ></input>
             <button
               type="button"
-              className="tokenAmount-button"
-              onClick={handleSetTokenAmount}
-              // disabled={tokenAmount <= 0 || hasTokenAmount}
+              className="duration-button"
+              onClick={handleSetDuration}
+              disabled={duration <= 0 || hasDuration}
             >
-              <span>Set token amount</span>
+              <span>Set duration</span>
             </button>
           </div>
-          <div className="stakingAdmin-mintAdress">
-            <button
-              type="button"
-              className="setAdressForReward-button"
-              onClick={handleSetContractAddressForRewardMinting}
-              disabled={hasRewardAddressDefined}
-            >
-              <span>Allow this contract for reward minting</span>
-            </button>
+          <div className="stakingAdmin-tokenAmount">
+            <div className="tokenAmount-input">
+              <input
+                className="tokenAmount-inputTxt"
+                name="tokenAmount"
+                type="text"
+                id="tokenAmount"
+                value={tokenAmount}
+                onChange={(e) => handleSetTokenAmountChange(e)}
+                // disabled={hasTokenAmount}
+              ></input>
+              <button
+                type="button"
+                className="tokenAmount-button"
+                onClick={handleSetTokenAmount}
+                // disabled={tokenAmount <= 0 || hasTokenAmount}
+              >
+                <span>Set token amount</span>
+              </button>
+            </div>
+            <div className="stakingAdmin-mintAdress">
+              <button
+                type="button"
+                className="setAdressForReward-button"
+                onClick={handleSetContractAddressForRewardMinting}
+                disabled={hasRewardAddressDefined}
+              >
+                <span>Allow this contract for reward minting</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

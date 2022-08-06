@@ -80,7 +80,7 @@ contract CMCStaking is Ownable {
      * @param _amount address
      * @dev calculate rewards
      */
-    function stake(uint256 _amount) external updateReward(msg.sender) {
+    function stake(uint256 _amount) public updateReward(msg.sender) {
         require(_amount > 0, "amount = 0");
         stakingToken.transferFrom(msg.sender, address(this), _amount);
         balanceOf[msg.sender] += _amount;

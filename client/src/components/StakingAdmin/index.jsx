@@ -8,9 +8,10 @@ function MainStakingAdmin({ refreshBalance }) {
     state: {
       contractCMC,
       contractCMCStaking,
+      contractCMCLiquidity,
       accounts,
       addressCMCStaking,
-      addressCMC,
+      addressCMCLiquidity,
       web3,
       networkID,
       isOwnerCMC,
@@ -20,15 +21,29 @@ function MainStakingAdmin({ refreshBalance }) {
 
   return (
     <div className="main">
-      {
-        <StakingAdmin
-          contractCMC={contractCMC}
-          contractCMCStaking={contractCMCStaking}
-          addressCMCStaking={addressCMCStaking}
-          accounts={accounts}
-          web3={web3}
-        />
-      }
+      <StakingAdmin
+        key="simpleStaking"
+        contractCMC={contractCMC}
+        contractCMCStaking={contractCMCStaking}
+        addressCMCStaking={addressCMCStaking}
+        accounts={accounts}
+        web3={web3}
+        adminInstruction={
+          "Admin please proceed with SIMPLE staking program configuration"
+        }
+      />
+      <hr></hr>
+      <StakingAdmin
+        key="liquidityStaking"
+        contractCMC={contractCMC}
+        contractCMCStaking={contractCMCLiquidity}
+        addressCMCStaking={addressCMCLiquidity}
+        accounts={accounts}
+        web3={web3}
+        adminInstruction={
+          "Admin please proceed with LIQUIDITY staking program configuration"
+        }
+      />
     </div>
   );
 }

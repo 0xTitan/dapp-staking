@@ -2,19 +2,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.13;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
 import "@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
 import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol";
 import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "./CMCStaking.sol";
 
 /** Staking contract with reward for CMC token */
-contract CMCLiquidity is Ownable {
+contract CMCLiquidity is CMCStaking {
     address private constant WETH = 0xc778417E063141139Fce010982780140Aa0cD5Ab;
     address public router;
     address public factory;
-    // User address => staked amount
-    mapping(address => uint256) public balanceOf;
 
     event Log(string message, uint256 val);
     event LogPairAddress(string message, address pairAddress);
@@ -26,7 +24,12 @@ contract CMCLiquidity is Ownable {
         bool success
     );
 
-    constructor(address _router, address _factory) {
+    constructor(
+        address _router,
+        address _factory,
+        address _stakingToken,
+        address _rewardToken
+    ) CMCStaking(_stakingToken, _rewardToken) {
         router = _router;
         factory = _factory;
     }
@@ -61,6 +64,7 @@ contract CMCLiquidity is Ownable {
         address pair = IUniswapV2Factory(factory).getPair(_tokenA, _tokenB);
         bool result = IUniswapV2Pair(pair).transfer(msg.sender, liquidity);
 
+        //update balance
         balanceOf[msg.sender] += liquidity;
 
         //get tokens sent in excess to this contract and send back to caller his tokens
