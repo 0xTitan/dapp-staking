@@ -12,10 +12,10 @@ module.exports = {
 
     kovan: {
       provider: function () {
-        return new HDWalletProvider({
-          mnemonic: { phrase: `${process.env.MNEMONIC}` },
-          providerOrUrl: `https://kovan.infura.io/v3/${process.env.INFURA_ID}`,
-        });
+        return new HDWalletProvider(
+          `${process.env.MNEMONIC}`,
+          `https://kovan.infura.io/v3/${process.env.INFURA_ID}`
+        );
       },
       network_id: 42,
     },

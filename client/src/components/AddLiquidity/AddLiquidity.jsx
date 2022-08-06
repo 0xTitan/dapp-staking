@@ -15,8 +15,14 @@ function AddLiquidity(props) {
     refreshBalance,
   } = props;
 
+  //Ropsten
   //const addressWETHRopsten = "0xc778417E063141139Fce010982780140Aa0cD5Ab";
-  const addressWETHRopsten = "0xbf4c0a77A3072FDaFC60e5758bC0243d40358f29";
+
+  //Kovan
+  const addressWETHRopsten = "0xd0A1E359811322d97991E03f863a0C30C2cF029C";
+
+  //Local - ganache - address FETH
+  //const addressWETHRopsten = "0xbf4c0a77A3072FDaFC60e5758bC0243d40358f29";
 
   const [tokenAmountToAddCMC, setTokenAmountToAddCMC] = useState(
     "Enter CMC Token amount you want to add"
@@ -112,7 +118,7 @@ function AddLiquidity(props) {
   /************************Handle stake liquidity************************** */
 
   const handleStakeLiquidity = async () => {
-    const amount = 0.1 * 1e18;
+    const amount = (lpAmount - 0.01) * 1e18;
     const stakeQty = web3.utils.toBN(amount);
     const contractPair = new web3.eth.Contract(
       artifactERC20["abi"],

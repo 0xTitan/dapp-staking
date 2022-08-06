@@ -325,6 +325,7 @@ module.exports = async function (deployer, network, accounts) {
       CMCInstance.address
     );
 
+    const CMCLiquidityInstance = await CMCLiquidity.deployed();
     await weth.methods
       .approve(CMCLiquidityInstance.address, 10000000)
       .send({ from: accounts[0] });
