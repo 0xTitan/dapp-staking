@@ -1,0 +1,47 @@
+.addLiquidity-main {
+  display: flex;
+  flex-direction: column;
+  min-height: 300px;
+  align-items: center;
+  margin: 15px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  justify-content: flex-start;
+}
+
+.addLiquidity-operation {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.addLiquidity-asset {
+  display: flex;
+  flex-direction: column;
+}
+
+.tokenCMC-inputTxt,
+.tokenWETH-inputTxt {
+  margin: 10px;
+  min-width: 300px;
+}
+
+.input-box {
+  position: relative;
+}
+
+.unit {
+  position: absolute;
+  display: block;
+  color: grey;
+  right: 15px;
+  top: 17px;
+  z-index: 9;
+}
+
+.lp-info {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row;
+}

@@ -1,11 +1,8 @@
 import { useState, useEffect } from "react";
 import useEth from "../../contexts/EthContext/useEth";
-import Title from "./Title";
-import Swap from "./Swap";
-import StakingAdmin from "./StakingAdmin";
-import Staking from "./Staking";
+import Mint from "./Mint";
 
-function Main({ refreshBalance }) {
+function MainMint({ refreshBalance }) {
   const {
     state,
     state: {
@@ -20,27 +17,13 @@ function Main({ refreshBalance }) {
       isOwnerCMCStaking,
     },
   } = useEth();
-  console.log("address CMC =>", addressCMC);
-
-  useEffect(() => {
-    console.log(state);
-  });
 
   return (
     <div className="main">
       {/* <Swap addressCMC={addressCMC} />
       <hr /> */}
-      {isOwnerCMC && (
-        <StakingAdmin
-          contractCMC={contractCMC}
-          contractCMCStaking={contractCMCStaking}
-          addressCMCStaking={addressCMCStaking}
-          accounts={accounts}
-          web3={web3}
-        />
-      )}
-      {!isOwnerCMC && (
-        <Staking
+      {
+        <Mint
           contractCMC={contractCMC}
           contractCMCStaking={contractCMCStaking}
           addressCMCStaking={addressCMCStaking}
@@ -48,9 +31,9 @@ function Main({ refreshBalance }) {
           web3={web3}
           refreshBalance={refreshBalance}
         />
-      )}
+      }
     </div>
   );
 }
 
-export default Main;
+export default MainMint;

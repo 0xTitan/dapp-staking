@@ -16,9 +16,7 @@ function Staking(props) {
   const [tokenAmountToWidthdraw, setTokenAmountToWidthdraw] = useState(
     "Enter CMC Token amount you want to withdraw"
   );
-  const [tokenAmountToMint, setTokenAmountToMint] = useState(
-    "Enter CMC Token amount you want to mint"
-  );
+
   const [balanceCMC, setBalanceCMC] = useState(0);
   const [rewardEarn, setRewardEarn] = useState(0);
   const [stakedAmount, setStakedAmount] = useState(0);
@@ -93,25 +91,6 @@ function Staking(props) {
     setTokenAmountToWidthdraw("");
   };
 
-  /***********************Mint management************************ */
-  const handleMintAmountChange = (e) => {
-    const { value } = e.target;
-    //remove non numeric character
-    const result = value.replace(/\D/g, "");
-    setTokenAmountToMint(result);
-  };
-
-  const handleMint = async () => {
-    let decimals = web3.utils.toBN(18);
-    const amount = web3.utils.toBN(tokenAmountToMint);
-    const mintQty = amount.mul(web3.utils.toBN(10).pow(decimals));
-    const transact = await contractCMC.methods
-      .mint(mintQty)
-      .send({ from: accounts[0] });
-    refreshBalance("refresh after mint");
-    setTokenAmountToMint("");
-  };
-
   /***********************Get staked amout info************************ */
   const getStakedBalance = async () => {
     if (contractCMCStaking) {
@@ -143,31 +122,6 @@ function Staking(props) {
 
   return (
     <>
-      <div className="staking-mainMint">
-        <span className="admin-instruction">
-          Please enter you amount of CMC token you want to mint. Max is 1000
-          token !
-        </span>
-        <div className="mint-input">
-          <input
-            className="mint-inputTxt"
-            name="mint"
-            type="text"
-            id="mint"
-            value={tokenAmountToMint}
-            onChange={(e) => handleMintAmountChange(e)}
-          ></input>
-          <button
-            type="button"
-            className="mint-button"
-            onClick={handleMint}
-            // disabled={duration <= 0 || hasDuration}
-          >
-            <span>Mint</span>
-          </button>
-        </div>
-      </div>
-      <hr></hr>
       <div className="staking-main">
         <div className="staking-admin-instruction">
           <span className="admin-instruction">
@@ -218,7 +172,7 @@ function Staking(props) {
               type="button"
               className="withdraw-button"
               onClick={handleWithdraw}
-              // disabled={duration <= 0 || hasDuration}
+              disabled={isNaN(tokenAmountToWidthdraw)}
             >
               <span>Withdraw</span>
             </button>

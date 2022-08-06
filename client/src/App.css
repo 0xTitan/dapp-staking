@@ -2,7 +2,8 @@
   width: 100%;
   height: 100%;
   display: flex;
-  align-items: center;
+  flex-direction: row;
+  align-items: flex-start;
   justify-content: center;
   font-size: 1.6rem;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
@@ -22,6 +23,11 @@
   min-width: 60rem;
   max-width: 75rem;
   height: 100%;
+}
+
+.app-navbar {
+  margin: 10px 50px 10px 30px;
+  width: 19rem;
 }
 
 button[class*="button"] {
@@ -95,6 +101,17 @@ span[class*="instruction"] {
   color: white;
   margin: 5px;
   padding-top: 10px;
+}
+
+.welcome {
+  display: flex;
+  flex-direction: column;
+  min-height: 300px;
+  align-items: center;
+  justify-content: center;
+  margin: 15px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
 }
 
 /* code {

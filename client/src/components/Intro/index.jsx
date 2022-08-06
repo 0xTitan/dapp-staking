@@ -1,13 +1,10 @@
 import { useState, useEffect } from "react";
 import useEth from "../../contexts/EthContext/useEth";
-
-import Welcome from "./Welcome";
-import Desc from "./Desc";
 import NoticeNoArtifact from "./NoticeNoArtifact";
 import NoticeWrongNetwork from "./NoticeWrongNetwork";
 import UserInformations from "./UserInformations";
 
-function Intro({ userInfo, refreshBalance }) {
+function Intro({ userInfo, refreshBalance, refreshOwner }) {
   const {
     state,
     state: {
@@ -17,6 +14,7 @@ function Intro({ userInfo, refreshBalance }) {
       address,
       web3,
       networkID,
+      isOwnerCMC,
     },
   } = useEth();
 
@@ -79,6 +77,7 @@ function Intro({ userInfo, refreshBalance }) {
         "..." +
         accounts[0].substring(accounts[0].length - 4, accounts[0].length);
       setUserAddress(addr);
+      refreshOwner(isOwnerCMC);
     }
   };
 
@@ -118,9 +117,6 @@ function Intro({ userInfo, refreshBalance }) {
         />
       )}
       <br />
-      {/* <Welcome />
-      <br />
-      <Desc /> */}
     </div>
   );
 }

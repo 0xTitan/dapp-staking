@@ -15,10 +15,11 @@ module.exports = async function (deployer, network, accounts) {
   await CMCInstance.mint(
     mintedQtyToOwner.mul(web3.utils.toBN(10).pow(decimals))
   );
-  await CMCInstance.mint(
-    mintedQtyToAccount1.mul(web3.utils.toBN(10).pow(decimals)),
-    { from: accounts[1] }
-  );
+
+  // await CMCInstance.mint(
+  //   mintedQtyToAccount1.mul(web3.utils.toBN(10).pow(decimals)),
+  //   { from: accounts[1] }
+  // );
 
   console.log(
     "balanceOf account 0 =>",

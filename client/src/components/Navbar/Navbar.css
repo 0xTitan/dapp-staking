@@ -1,0 +1,37 @@
+.nav-menu {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+  width: 200px;
+  height: 95vh;
+  display: flex;
+  justify-content: center;
+  position: fixed;
+}
+
+.nav-text {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  height: 40px;
+  padding: 2px;
+}
+
+.nav-text a {
+  text-decoration: none;
+  color: #f5f5f5;
+  font-size: 18px;
+  width: 75%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  border-radius: 4px;
+}
+
+.nav-text a:hover {
+  background-color: #e77408de;
+}
+
+.nav-menu-items {
+  width: 80%;
+}
