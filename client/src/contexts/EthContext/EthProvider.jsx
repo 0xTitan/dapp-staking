@@ -11,9 +11,15 @@ function EthProvider({ children }) {
       artifactCMC,
       artifactCMCStaking,
       artifactCMCLiquidity,
-      artifactERC20
+      artifactERC20,
+      artifactChainlink
     ) => {
-      if (artifactCMC && artifactCMCStaking && artifactCMCLiquidity) {
+      if (
+        artifactCMC &&
+        artifactCMCStaking &&
+        artifactCMCLiquidity &&
+        artifactChainlink
+      ) {
         const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
         const accounts = await web3.eth.requestAccounts();
         const networkID = await web3.eth.net.getId();
@@ -23,6 +29,8 @@ function EthProvider({ children }) {
           contractCMCStaking,
           addressCMCLiquidity,
           contractCMCLiquidity,
+          addressChainlink,
+          contractChainlink,
           isOwnerCMC,
           isOwnerCMCStaking,
           isOwnerCMCLiquidity;
@@ -60,6 +68,15 @@ function EthProvider({ children }) {
               .owner()
               .call({ from: accounts[0] })) === accounts[0];
           console.log("isOwnerCMCLiquidity : " + isOwnerCMCLiquidity);
+
+          //Chainlink
+
+          addressChainlink = artifactChainlink.networks[networkID].address;
+          contractChainlink = new web3.eth.Contract(
+            artifactChainlink["abi"],
+            addressChainlink
+          );
+          console.log("addressChainlink =>", addressChainlink);
         } catch (err) {
           console.error(err);
         }
@@ -96,11 +113,13 @@ function EthProvider({ children }) {
         const artifactCMCStaking = require("../../contracts/CMCStaking.json");
         const artifactCMCLiquidity = require("../../contracts/CMCLiquidity.json");
         const artifactERC20 = require("../../contracts/ERC20.json");
+        const artifactChainlink = require("../../contracts/Chainlink.json");
         init(
           artifactCMC,
           artifactCMCStaking,
           artifactCMCLiquidity,
-          artifactERC20
+          artifactERC20,
+          artifactChainlink
         );
       } catch (err) {
         console.error(err);
@@ -131,6 +150,7 @@ function EthProvider({ children }) {
     state.artifactCMCStaking,
     state.artifactCMCLiquidity,
     state.artifactERC20,
+    state.artifactChainlink,
   ]);
 
   return (

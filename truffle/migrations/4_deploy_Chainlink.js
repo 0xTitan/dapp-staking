@@ -6,8 +6,10 @@ module.exports = async function (deployer, network, accounts) {
 
   const ChainlinkInstance = await Chainlink.deployed();
 
-  console.log(
-    "getETH/USD price =>",
-    (await ChainlinkInstance.getLatestPrice()).toString()
-  );
+  if (network === "kovan") {
+    console.log(
+      "getETH/USD price =>",
+      (await ChainlinkInstance.getLatestPrice()).toString()
+    );
+  }
 };
