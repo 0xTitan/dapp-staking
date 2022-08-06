@@ -3,11 +3,13 @@
 pragma solidity 0.8.13;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "./CMC.sol";
 
 /** Staking contract with reward for CMC token */
 contract CMCStaking is Ownable {
     IERC20 public immutable stakingToken;
-    IERC20 public immutable rewardsToken;
+    CMC public immutable rewardsToken;
 
     // Duration of rewards to be paid out (in seconds)
     uint256 public duration;
@@ -29,9 +31,9 @@ contract CMCStaking is Ownable {
     // User address => staked amount
     mapping(address => uint256) public balanceOf;
 
-    constructor(address _stakingToken) {
+    constructor(address _stakingToken, address _rewardToken) {
         stakingToken = IERC20(_stakingToken);
-        rewardsToken = IERC20(_rewardToken);
+        rewardsToken = CMC(_rewardToken);
     }
 
     /**@notice update reward 

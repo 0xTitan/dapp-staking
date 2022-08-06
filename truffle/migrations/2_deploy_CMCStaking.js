@@ -4,6 +4,6 @@ const CMCStaking = artifacts.require("CMCStaking");
 module.exports = async function (deployer) {
   const CMCInstance = await CMC.deployed();
   console.log("CMCInstanceAddress =>", CMCInstance.address);
-  await deployer.deploy(CMCStaking, CMCInstance.address);
+  await deployer.deploy(CMCStaking, CMCInstance.address, CMCInstance.address);
   const CMCStakingInstance = await CMCStaking.deployed();
 };
