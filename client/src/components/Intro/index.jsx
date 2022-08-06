@@ -19,8 +19,6 @@ function Intro({ userInfo, refreshBalance, refreshOwner }) {
   } = useEth();
 
   const [userAddress, setUserAddress] = useState(null);
-  console.log("userAddress =>", userAddress);
-
   const [contractAddress, setContractAddress] = useState(null);
   const [balance, setBalance] = useState(0);
   const [balanceCMC, setBalanceCMC] = useState(0);
@@ -30,13 +28,6 @@ function Intro({ userInfo, refreshBalance, refreshOwner }) {
   useEffect(() => {
     async function getDetails() {
       if (state && accounts) {
-        //à implémenter lorsque nous aurons ajouté l'inheritance ownable d'Open Zeppelin:
-        //let owner = await contract.methods.owner().call();
-
-        //setUserAddress(accounts);
-        //setContractAddress(address);
-        //setOwnerAddress(owner);
-
         getCurrentAddress();
         getBalance();
         getCMCBalance();
@@ -96,6 +87,9 @@ function Intro({ userInfo, refreshBalance, refreshOwner }) {
         break;
       case 5:
         setNetwork("Goerli");
+        break;
+      case 42:
+        setNetwork("Kovan");
         break;
       default:
         setNetwork("local - Ganache");

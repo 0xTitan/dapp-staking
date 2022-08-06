@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import useEth from "./contexts/EthContext/useEth";
 import Intro from "./components/Intro/";
-import Footer from "./components/Footer/Footer";
+import MainFooter from "./components/Footer";
 import Navbar from "./components/Navbar/Navbar";
 import MainStaking from "./components/Staking";
 import MainMint from "./components/Mint";
@@ -89,7 +89,7 @@ function App() {
                 element={<Navigate to="/dapp-staking" replace />}
               />
             </Routes>
-            <Footer />
+            <MainFooter />
           </div>
         </div>
       </EthProvider>

@@ -12,13 +12,15 @@ function EthProvider({ children }) {
       artifactCMCStaking,
       artifactCMCLiquidity,
       artifactERC20,
-      artifactChainlink
+      artifactChainlink,
+      artifactFactory
     ) => {
       if (
         artifactCMC &&
         artifactCMCStaking &&
         artifactCMCLiquidity &&
-        artifactChainlink
+        artifactChainlink &&
+        artifactFactory
       ) {
         const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
         const accounts = await web3.eth.requestAccounts();
@@ -31,6 +33,8 @@ function EthProvider({ children }) {
           contractCMCLiquidity,
           addressChainlink,
           contractChainlink,
+          addressFactory,
+          contractFactory,
           isOwnerCMC,
           isOwnerCMCStaking,
           isOwnerCMCLiquidity;
@@ -76,6 +80,18 @@ function EthProvider({ children }) {
             artifactChainlink["abi"],
             addressChainlink
           );
+
+          //Factory
+
+          addressFactory = await contractCMCLiquidity.methods.factory().call();
+          contractFactory = new web3.eth.Contract(
+            artifactFactory["abi"],
+            addressFactory
+          );
+
+          //Pair:
+
+          // Pair contract is directly instantiated in Footer component in order to get price
         } catch (err) {
           console.error(err);
         }
@@ -87,6 +103,7 @@ function EthProvider({ children }) {
             artifactCMCLiquidity,
             artifactERC20,
             artifactChainlink,
+            artifactFactory,
             web3,
             accounts,
             networkID,
@@ -94,9 +111,12 @@ function EthProvider({ children }) {
             contractCMCStaking,
             contractCMCLiquidity,
             contractChainlink,
+            contractFactory,
             addressCMC,
             addressCMCStaking,
             addressCMCLiquidity,
+            addressChainlink,
+            addressFactory,
             isOwnerCMC,
             isOwnerCMCStaking,
             isOwnerCMCLiquidity,
@@ -115,12 +135,14 @@ function EthProvider({ children }) {
         const artifactCMCLiquidity = require("../../contracts/CMCLiquidity.json");
         const artifactERC20 = require("../../contracts/ERC20.json");
         const artifactChainlink = require("../../contracts/Chainlink.json");
+        const artifactFactory = require("../../contracts/IUniswapV2Factory.json");
         init(
           artifactCMC,
           artifactCMCStaking,
           artifactCMCLiquidity,
           artifactERC20,
-          artifactChainlink
+          artifactChainlink,
+          artifactFactory
         );
       } catch (err) {
         console.error(err);
@@ -138,7 +160,8 @@ function EthProvider({ children }) {
         state.artifactCMCStaking,
         state.artifactCMCLiquidity,
         state.artifactERC20,
-        state.artifactChainlink
+        state.artifactChainlink,
+        state.artifactFactory
       );
     };
 
@@ -153,6 +176,7 @@ function EthProvider({ children }) {
     state.artifactCMCLiquidity,
     state.artifactERC20,
     state.artifactChainlink,
+    state.artifactFactory,
   ]);
 
   return (
