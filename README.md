@@ -1,40 +1,38 @@
-# React Truffle Box
+# Staking dapp
 
-This box comes with everything you need to start using Truffle to write, compile, test, and deploy smart contracts, and interact with them from a React app.
+This dapp allow the smart contract owner to define reward program :
+ - One fore simple asset staking
+ - One for liquidity provider
 
-## Installation
+User wanted to participated and test the dapp will have the possibility to :
+ - Mint dapp token CMC
+ - Stake CMC
+ - Add Liquidity CMC/WETH
 
-First ensure you are in an empty directory.
+The dapp is deployed on Kovan network to allow us to use Chainlink oracle to get WETH price.
 
-Run the `unbox` command using 1 of 2 ways.
+To be able to create our own pair for liquidity we used and adapt UniswapV2Factory and UniswapV2Router coming from Uniswap :
+ - https://github.com/Uniswap/v2-core/blob/master/contracts/UniswapV2Factory.sol 
+ - https://github.com/Uniswap/v2-periphery/blob/master/contracts/UniswapV2Router02.sol
 
-```sh
-# Install Truffle globally and run `truffle unbox`
-$ npm install -g truffle
-$ truffle unbox react
-```
+# DAPP link
 
-```sh
-# Alternatively, run `truffle unbox` via npx
-$ npx truffle unbox react
-```
+Please visit : https://0xtitan.github.io/dapp-staking/
 
-Start the react dev server.
+# Smart contract address (Kovan)
 
-```sh
-$ cd client
-$ npm start
-  Starting the development server...
-```
+CMC token : 0xC006305837a3910FA894B53e5A0ed1d4AeFBb748
+Pair CMC/WETH : 0x3DC94fC6C65081111717a3F357ba24205b906d1B
+CMCStaking : 0xC006305837a3910FA894B53e5A0ed1d4AeFBb748
+CMCLiquidity : 0x7BbA088AeBfFF5576D83C02cBAC1f9832Ac07407 
 
-From there, follow the instructions on the hosted React app. It will walk you through using Truffle and Ganache to deploy the `SimpleStorage` contract, making calls to it, and sending transactions to change the contract's state.
+UniswapV2FactoryInstance : 0xff64736C16cC041097d0D6f7407438Ff74d4b9FF
+UniswapV2RouterInstance : 0xD69a819Fd044c8902dBe28F429d7D3Dab8994925
 
-## FAQ
+Chainlink : 0x9CC2ce2342839Db927f1F3641146F404b96b2c85
 
-- __How do I use this with Ganache (or any other network)?__
+# Loom link
 
-  The Truffle project is set to deploy to Ganache by default. If you'd like to change this, it's as easy as modifying the Truffle config file! Check out [our documentation on adding network configurations](https://trufflesuite.com/docs/truffle/reference/configuration/#networks). From there, you can run `truffle migrate` pointed to another network, restart the React dev server, and see the change take place.
+- Video 1 : 
 
-- __Where can I find more resources?__
 
-  This Box is a sweet combo of [Truffle](https://trufflesuite.com) and [Create React App](https://create-react-app.dev). Either one would be a great place to start!
