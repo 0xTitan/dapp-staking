@@ -33,6 +33,8 @@ Chainlink : 0x9CC2ce2342839Db927f1F3641146F404b96b2c85
 
 # Loom link
 
-- Video 1 : 
+- Video 1 : https://www.loom.com/share/6f0a3feedd0c410d8550d4ce52463a19
+- Video 2 : https://www.loom.com/share/7bf9a5a513384b6295b3e5af3904bb36
+- Video 3 : https://www.loom.com/share/450cd0214fd446d591cb29707168f3bb
 
 
